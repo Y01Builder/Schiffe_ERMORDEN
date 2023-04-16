@@ -1,36 +1,55 @@
 from typing import Any
-import DTO.Player
-
+from DTO.Player import Player
 
 class Game:
 
-    __player1 = None
-    __player2 = None
 
     def __init__(self, size):
         self.size = size
 
     def startGame(self):
-        exitGame = False
+
+        print("Spiel Beginn!")
+        player1 = self.__createPlayer(0)
+        player2 = self.__createPlayer(1)
+
+        # TODO: Würfeln wer anfängt.
+
+        player1.shootField()
+
         while True:
-            print("Spiel Beginn!")
-            test = DTO.Player("Name", 2)
+
+            if player1.shootField() == True:
+                self.endGame(player1)
+                break
+                # Speichern
+            if player2.shootField() == True:
+                self.endGame(player2)
+                break
+                # Speichern
+        return
+
+    def __createPlayer(self, id):
+        namePlayer = input(f"Bitte benennen Sie Spieler {id+1}!")
+
+        player = Player(namePlayer, id)
+
+        self.__setShips(player)
+        return player
+
+    def __setShips(self, player):
+        print(f"{player.name}! Setze deine Schiffe!")
+        player.placeShips()
+
+    def __loadGame(self):
+
+        # TODO: Speicher laden lassen.
+
+        print()
 
 
-
-            return
-
-    def __createPlayers__(self):
-        namePlayer1 = input("Bitte benennen Sie Spieler 1:")
-
-        namePlayer2 = input("Bitte benennen Sie Spieler 2:")
-
-        __player1 = Player(namePlayer1, 0)
-        __player2 = Player(namePlayer2, 1)
-
-
-    def endGame(self):
-        print(f'Hi')
+    def endGame(self, winner):
+        print(f'{winner.name} Hat alle Schiffe seines Gegners ERMORDET!')
 
     def clear(self):
         print(f'Hi')

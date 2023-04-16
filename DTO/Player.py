@@ -10,7 +10,7 @@ class Player:
         print(f'Hi')
         return True
 
-    def placeShip(self):
+    def placeShips(self):
         print(f'Hi')
 
 
