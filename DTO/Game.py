@@ -1,9 +1,14 @@
 class Game:
-    def __init__(self, size):
-        self.size = size
-
     def startGame(self):
-        print(f'Hi')  # Press Strg+F8 to toggle the breakpoint.
+        while True:
+            print("Spiel Beginn!")
+
+            input("Bitte benennen Sie Spieler 1:")
+
+            input("Bitte benennen Sie Spieler 2:")
+            return
+
+
 
     def endGame(self):
         print(f'Hi')  # Press Strg+F8 to toggle the breakpoint.
