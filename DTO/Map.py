@@ -4,6 +4,8 @@ class Map:
         self.ownerId = ownerId
         self.fields = fields
 
-        
+    def printThisMap(self, showShips):
+        print(f'Hi')
+        return
 
 
