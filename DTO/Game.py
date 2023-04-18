@@ -1,4 +1,3 @@
-from typing import Any
 from DTO.Player import Player
 
 class Game:
