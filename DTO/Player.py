@@ -29,7 +29,7 @@ class Player:
         self.__map.placeShips(coordinate)
 
     def __validateCoordinate(self, coordinate):
-        pattern = re.compile("^([a-jA-J])([1-9][0])?$")
+        pattern = re.compile("^([a-jA-J])([1-9]|[1][0])?$")
         matches = pattern.match(coordinate)
         if matches:
             return matches.groups()
