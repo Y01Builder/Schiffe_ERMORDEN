@@ -25,8 +25,8 @@ class Player:
                 orientation = input(f"Bitte geben Sie die Orientierung für das Schiff {name} an! z.B. N, O, S, W")
                 splittedCoordinates = self.__validateCoordinate(coordinate)
                 validatedOrientation = self.__validateCoordinate(coordinate)
-        input("Bitte geben Sie die Platzierung der Schiffe an:")
-        self.__map.placeShips(coordinate)
+            input("Bitte geben Sie die Platzierung der Schiffe an:")
+            self.__map.placeShips(coordinate, orientation, length)
 
     def __validateCoordinate(self, coordinate):
         pattern = re.compile("^([a-jA-J])([1-9]|[1][0])?$")
