@@ -3,22 +3,8 @@ class Field:
         self.fieldHit = fieldHit
         self.shipOnField = shipOnField
 
-    def hitField(self):
-        print(f'Hi')
-        return True
+    def isHit(self):
+        return self.fieldHit
 
-    def setShip(self):
-        print(f'Hi')
-        return True
-
-    def sinkShip(self):
-        print(f'Hi')
-        return True
-
-    def isMeHit(self):
-        print(f'Hi')
-        return True
-
-    def isMeShip(self):
-        print(f'Hi')
-        return True
+    def isShip(self):
+        return self.shipOnField
