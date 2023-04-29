@@ -1,29 +1,37 @@
+import os
+import sys
+import json
+
 from DTO.Player import Player
 
 class Game:
 
 
     def __init__(self):
-        return
+        self.player1 = self.__createPlayer(0)
+        self.player2 = self.__createPlayer(1)
+
     def startGame(self):
         print("Spiel Beginn!")
-        player1 = self.__createPlayer(0)
-        player2 = self.__createPlayer(1)
 
 
         while True:
 
-            if player1.shootField(player2):
-                self.endGame(player1)
+            if self.player1.shootField(self.player2):
+                self.endGame(self.player1)
                 break
-            player1.printMap(showShips=True)
-            player2.printMap(showShips=False)
+            self.__saveGame(self.player1)
+            self.__saveGame(self.player2)
+            self.player1.printMap(showShips=True)
+            self.player2.printMap(showShips=False)
             # Speichern
-            if player2.shootField(player1):
-                self.endGame(player2)
+            if self.player2.shootField(self.player1):
+                self.endGame(self.player2)
                 break
-            player2.printMap(showShips=True)
-            player1.printMap(showShips=False)
+            self.__saveGame(self.player1)
+            self.__saveGame(self.player2)
+            self.player2.printMap(showShips=True)
+            self.player1.printMap(showShips=False)
             # Speichern
         return
 
@@ -47,14 +55,12 @@ class Game:
         print()
         return
 
-
-
     def endGame(self, winner):
         print(f'{winner.name} Hat alle Schiffe seines Gegners ERMORDET!')
 
     def clear(self):
-        print(f'Hi')
-
-
-
-
+        if sys.platform == "win32":
+            clear = "cls"
+        else:
+            clear = "clear"
+        os.system(clear)

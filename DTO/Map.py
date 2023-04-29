@@ -1,3 +1,5 @@
+import json
+
 from DTO.Field import Field
 class Map:
     def __init__(self, ownerId, floatingShips = 0):
@@ -45,7 +47,13 @@ class Map:
         else:
             print("Daneben!")
         actualField.fieldHit = True
+        self.__saveMap(self.fields[0][0])
         return True
+
+    def __saveMap(self, field):
+        with open(f"mapPlayer{self.ownerId}.json", "w") as f:
+            f.write(json.dumps(field, indent=2))
+            #json.dumps(field, default=lambda o: o.dict, sort_keys=True, indent=4)
 
     def __initMap(self):
         print("")
@@ -70,6 +78,12 @@ class Map:
                         if self.fields[xValue+j][yValue+k].shipOnField:
                             return False
 
+            # Checkt ob das Schiff außerhalb des Spielfelds liegen würde
+            if xValue < 0 or xValue >= 10:
+                return False
+            elif yValue < 0 or yValue >= 10:
+                return False
+
             # erweitert Schiff nach Orientierung
             if orientation == "S":
                 yValue += 1
@@ -80,9 +94,4 @@ class Map:
             elif orientation == "O":
                 xValue += 1
 
-            # Checkt ob das Schiff außerhalb des Spielfelds liegen würde
-            if xValue < 0 or xValue >= 10:
-                return False
-            elif yValue < 0 or yValue >= 10:
-                return False
         return True
