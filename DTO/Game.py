@@ -1,66 +1,171 @@
 import os
+import pickle
 import sys
-import json
 
 from DTO.Player import Player
 
+
 class Game:
 
+    def __init__(self, path):
 
-    def __init__(self):
-        self.player1 = self.__createPlayer(0)
-        self.player2 = self.__createPlayer(1)
+        # set players as a standard player object in case of an error
+        self.player1 = Player("User1", 0)
+        self.player2 = Player("User2", 1)
+
+        # get path of main.py to load and save the player objects
+        self.path = path
 
     def startGame(self):
         print("Spiel Beginn!")
+        print("")
 
+        # if save files exist: try to load them.
+        if os.path.exists(f"{self.path}\mapPlayer{self.player1.id+1}.pickle") and os.path.exists(f"{self.path}\mapPlayer{self.player2.id+1}.pickle"):
+            try:
+                self.player1 = self.__loadGame(self.player1)
+                self.player2 = self.__loadGame(self.player2)
+            except:
 
+                # create new players, when the save file can not be loaded
+                print("Ein Fehler ist beim Laden aufgetreten! Erstelle neue Spieler.")
+                self.player1 = self.__createPlayer(0)
+                self.player2 = self.__createPlayer(1)
+        else:
+
+            # create new players, when there is no save file
+            self.player1 = self.__createPlayer(0)
+            self.player2 = self.__createPlayer(1)
+
+        # loop attacks while no player has won
         while True:
 
-            if self.player1.shootField(self.player2):
-                self.endGame(self.player1)
-                break
-            self.__saveGame(self.player1)
-            self.__saveGame(self.player2)
-            self.player1.printMap(showShips=True)
-            self.player2.printMap(showShips=False)
-            # Speichern
-            if self.player2.shootField(self.player1):
-                self.endGame(self.player2)
-                break
-            self.__saveGame(self.player1)
-            self.__saveGame(self.player2)
-            self.player2.printMap(showShips=True)
-            self.player1.printMap(showShips=False)
-            # Speichern
+            # clear the screen
+            self.clear()
+
+            # check if it is player 1's turn
+            if self.player1.turn and not self.player2.turn:
+
+                # break the loop, if the Turn returns end of game
+                if self.__playerTurn(player=self.player1, opponent=self.player2):
+                    break
+
+            # check if it is player 2's turn
+            elif self.player2.turn and not self.player1.turn:
+
+                # break the loop, if the Turn returns end of game
+                if self.__playerTurn(player=self.player2, opponent=self.player1):
+                    break
+
+            else:
+                # player 1 will start, if no save file can be found
+                self.player1.turn = True
+                self.player2.turn = False
+
+        # return to main, once the game has ended
         return
 
     def __createPlayer(self, id):
-        namePlayer = input(f"Bitte benennen Sie Spieler {id+1}!\n")
 
+        print("")
+
+        # get Name of player and create the object
+        namePlayer = input(f"Bitte benennen Sie Spieler {id+1}!\n")
         player = Player(namePlayer, id)
         print("")
+
+        # let the player place his ships
         self.__setShips(player)
+
+        # clear the screen
+        self.clear()
+
+        # return the player object
         return player
 
     def __setShips(self, player):
+
+        # call the placeShips function on the new player
         print(f"{player.name}! Setze deine Schiffe!")
         player.placeShips()
         return
 
-    def __loadGame(self):
+    def __playerTurn(self, player, opponent):
 
-        # TODO: Speicher laden lassen.
+        # prints ASCII art of the player
+        self.__printPlayer(player.id)
 
-        print()
-        return
+        # show maps of opponent (top) and player (bottom)
+        opponent.printMap(showShips=False)
+        player.printMap(showShips=True)
+
+        # the loop will break, if the shootField method returns end of game
+        if player.shootField(opponent):
+            self.endGame(player)
+            return True
+
+        # save after each hit, as to prevent data loss
+        self.__saveMap(self.player1)
+        self.__saveMap(self.player2)
+
+        return False
+
+    def __saveMap(self, player):
+
+        # save the player object into the mapPlayerX.pickle file
+        with open(f"mapPlayer{player.id+1}.pickle", "wb") as f:
+            pickle.dump(player, f)
+
+    def __loadGame(self, player):
+
+        # load the player object from the mapPlayerX.pickle file
+        with open(f"mapPlayer{player.id+1}.pickle", "rb") as f:
+            player = pickle.load(f)
+
+        # return the player object
+        return player
+
 
     def endGame(self, winner):
+
+        # print the winner and delete current save files
         print(f'{winner.name} Hat alle Schiffe seines Gegners ERMORDET!')
+        os.remove(f"{self.path}\mapPlayer1.pickle")
+        os.remove(f"{self.path}\mapPlayer2.pickle")
 
     def clear(self):
+
+        # check for OS and set the according "clear screen" command
         if sys.platform == "win32":
             clear = "cls"
         else:
             clear = "clear"
+
+        # execute the "clear screen" command
         os.system(clear)
+
+    def __printPlayer(self, id):
+        if id == 0:
+
+            # print "Spieler 1" in ASCII art
+            print("  ____        _      _             _ ")
+            print(" / ___| _ __ (_) ___| | ___ _ __  / |")
+            print(" \___ \| '_ \| |/ _ \ |/ _ \ '__| | |")
+            print("  ___) | |_) | |  __/ |  __/ |    | |")
+            print(" |____/| .__/|_|\___|_|\___|_|    |_|")
+            print("       |_|")
+            print("")
+
+        elif id == 1:
+
+            # print "Spieler 2" in ASCII art
+            print("  ____        _      _             ____  ")
+            print(" / ___| _ __ (_) ___| | ___ _ __  |___ \ ")
+            print(" \___ \| '_ \| |/ _ \ |/ _ \ '__|   __) |")
+            print("  ___) | |_) | |  __/ |  __/ |     / __/ ")
+            print(" |____/| .__/|_|\___|_|\___|_|    |_____|")
+            print("       |_|")
+            print("")
+
+
+
