@@ -3,12 +3,12 @@ import re
 
 class Player:
 
-    #__ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-    __ships = [["Schlachtschiff", 5, 1]]
+    #_ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
+    _ships = [["Schlachtschiff", 5, 1]]
     def __init__(self, name, id):
         self.name = name
         self.id = id
-        self.__map = Map(id)
+        self._map = Map(id)
 
 
     def printMap(self, showShips):
@@ -17,9 +17,9 @@ class Player:
         for row in range(0, 10):
             printable = [f"{row+1}"]
             for columns in range(0,10):
-                if self.__map.fields[columns][row].shipOnField and showShips:
+                if self._map.fields[columns][row].shipOnField and showShips:
                     printable.append(f"\tO")
-                elif self.__map.fields[columns][row].fieldHit:
+                elif self._map.fields[columns][row].fieldHit:
                     printable.append(f"\tX")
                 else:
                     printable.append(f"\t~")
@@ -30,34 +30,34 @@ class Player:
         repeat = True
         while repeat:
             coordinate = input(f"Bitte geben Sie die Koordinate des Zieles (z.B.B4) an!")
-            validated = opponent.__validateCoordinate(coordinate)
+            validated = opponent._validateCoordinate(coordinate)
             if not validated:
                 print("Bitte versuchen Sie es erneut")
             else:
-                if opponent.__map.hitField(validated):
+                if opponent._map.hitField(validated):
                     repeat = False
-                    if opponent.__map.shipTiles == 0:
+                    if opponent._map.shipTiles == 0:
                         return True
         return False
 
     def placeShips(self):
-        for name, length, count in self.__ships:
+        for name, length, count in self._ships:
             for i in range(0, count):
                 repeat = True
                 while repeat:
                     self.printMap(showShips=True)
                     coordinate = input(f"Bitte geben Sie die Startkoordinate für das Schiff {name} an! z.B. B4\n")
                     orientation = input(f"Bitte geben Sie die Orientierung für das Schiff {name} an! z.B. N, O, S, W\n")
-                    splittedCoordinates = self.__validateCoordinate(coordinate)
-                    validatedOrientation = self.__validateOrientation(orientation)
+                    splittedCoordinates = self._validateCoordinate(coordinate)
+                    validatedOrientation = self._validateOrientation(orientation)
                     if not splittedCoordinates or not validatedOrientation:
                         print("Bitte versuchen Sie es erneut!")
                         repeat = True
                     else:
-                        repeat = not self.__map.placeShips(splittedCoordinates, validatedOrientation, length)
+                        repeat = not self._map.placeShips(splittedCoordinates, validatedOrientation, length)
         return
 
-    def __validateCoordinate(self, coordinate):
+    def _validateCoordinate(self, coordinate):
         pattern = re.compile("^([a-jA-J])([1-9]|[1][0])?$")
         matches = pattern.match(coordinate)
         if matches:
@@ -67,7 +67,7 @@ class Player:
             return False
             #todo Exception werfen
 
-    def __validateOrientation(self, orientation):
+    def _validateOrientation(self, orientation):
         pattern = re.compile("^[N,W,O,S]?$")
         matches = pattern.match(orientation)
         if matches:
