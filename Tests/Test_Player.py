@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-from DTO.Map import Map
 from DTO.Player import Player
 
 class TestPlayer(unittest.TestCase):
@@ -10,7 +9,7 @@ class TestPlayer(unittest.TestCase):
         self.opponent = Player("Yannick", 2)
 
     def test_init(self):
-        self.assertEqual(self.player.name, "Yannick")
+        self.assertEqual(self.player.name, "Mario")
         self.assertEqual(self.player.id, 1)
 
     def test_validate_coordinate(self):

@@ -1,11 +1,10 @@
 import unittest
-from DTO.Field import Field
 from DTO.Map import Map
 
 class MapTests(unittest.TestCase):
 
     def setUp(self):
-        self.map = Map("Mario", 0)
+        self.map = Map(0)
 
     def test_placeShips_validPlacement(self):
         # Testet platzieren von Schiffen an Position
