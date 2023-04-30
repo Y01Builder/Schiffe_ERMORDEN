@@ -24,7 +24,8 @@ class TestGame(unittest.TestCase):
         self.assertEqual(self.game.player2.playerid, 1)
 
     def test_create_player(self):
-        with patch('builtins.input', side_effect=['Mario']):
+        with patch('builtins.input', side_effect=['Mario', "A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1",
+                                                  "S", "J10", "N", "A8", "O", "J7", "W", "F2", "O"]):
             player = self.game._Game__create_player(0)
         self.assertIsInstance(player, Player)
         self.assertEqual(player.name, 'Mario')

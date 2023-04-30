@@ -135,7 +135,7 @@ class Game:
         except PermissionError:
             print("Sie haben keine Berechtigung auf die Datei oder Ordner zuzugreifen!")
         except FileNotFoundError:
-            print(f"Die Datei mapPlayer{player.id + 1}.pickle war nicht vorhanden!")
+            print(f"Die Datei mapPlayer{player.playerid + 1}.pickle war nicht vorhanden!")
         return False
 
     def end_game(self, winner):
