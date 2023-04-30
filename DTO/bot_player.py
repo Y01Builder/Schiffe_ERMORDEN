@@ -33,8 +33,8 @@ class BotPlayer(Player):
                     ty = randint(0, 9)
                     if opponent.map.fields[ty][tx].get_field_hit():
                         valid_hit = True
-                        return [chr(tx+97),ty+1]                        
-                case 1:               
+                        return [chr(tx+97),ty+1]  
+                case 1:
                     valid_hit = True
                     return __statistics_bitch(opponent)
                 case 2:
@@ -126,17 +126,32 @@ class BotPlayer(Player):
         
             __statistic_matrix[tmp_y][tmp_x] = 0
             
-            if (tmp_y-1)>=0 and (tmp_x-1)>=0:
-                __statistic_matrix[(tmp_y-1)][(tmp_x-1)] = 0
+            if (tmp_y-1)>=0:
+                __statistic_matrix[(tmp_y-1)][(tmp_x)] += 5
                 
-            if (tmp_y-1)>=0 and (tmp_x+1)<=9:
-                __statistic_matrix[(tmp_y-1)][(tmp_x+1)] = 0
+                if (tmp_x-1)>=0:                    
+                    __statistic_matrix[(tmp_y)][(tmp_x-1)] += 5                    
+                    __statistic_matrix[(tmp_y-1)][(tmp_x-1)] = 0
+                    
+                if (tmp_x+1)<=9:                  
+                    __statistic_matrix[(tmp_y)][(tmp_x+1)] += 5                    
+                    __statistic_matrix[(tmp_y-1)][(tmp_x+1)] = 0      
+                    
+            else:
+                if (tmp_x-1)>=0:                    
+                    __statistic_matrix[(tmp_y)][(tmp_x-1)] += 5
+                    
+                if (tmp_x+1)<=9:                  
+                    __statistic_matrix[(tmp_y)][(tmp_x+1)] += 5
+                    
+            if (tmp_y+1)<=9:
+                __statistic_matrix[(tmp_y+1)][(tmp_x)] += 5
                 
-            if (tmp_y+1)<=9 and (tmp_x-1)>=0:
-                __statistic_matrix[(tmp_y+1)][(tmp_x-1)] = 0
-                
-            if (tmp_y+1)<=9 and (tmp_x+1)<=9:
-                __statistic_matrix[(tmp_y+1)][(tmp_x+1)] = 0
+                if (tmp_x-1)>=0:                                    
+                    __statistic_matrix[(tmp_y+1)][(tmp_x-1)] = 0
+                    
+                if (tmp_x+1)<=9:                                  
+                    __statistic_matrix[(tmp_y+1)][(tmp_x+1)] = 0   
             
         else:            
             __statistic_matrix[tmp_y][tmp_x] = 0
