@@ -1,6 +1,6 @@
 import os
 
-from DTO.Game import Game
+from DTO.game import Game
 
 if __name__ == '__main__':
     try:
@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
         # create and start a new game
         game = Game(path)
-        game.startGame()
+        game.start_game()
 
         # repeat until no new game is wanted
         again = True
@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
                 # create and start a new game
                 game = Game(path)
-                game.startGame()
+                game.start_game()
 
             else:
                 again = False

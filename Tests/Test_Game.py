@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
-from DTO.Player import Player
-from DTO.Game import Game
+from DTO.player import Player
+from DTO.game import Game
 import pickle
 import os
 

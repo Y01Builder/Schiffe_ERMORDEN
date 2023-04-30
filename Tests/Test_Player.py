@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from DTO.Player import Player
+from DTO.player import Player
 
 class TestPlayer(unittest.TestCase):
 
@@ -35,12 +35,12 @@ class TestPlayer(unittest.TestCase):
         self.assertFalse(self.player._validateOrientation("123"))
 
     def test_shoot_field(self):
-        self.opponent._map.fields[0][0].shipOnField = True
-        self.opponent._map.fields[0][0].fieldHit = False
+        self.opponent._map.fields[0][0].shiponfield = True
+        self.opponent._map.fields[0][0].fieldhit = False
         self.opponent._map.shipTiles = 1
         with patch("builtins.input", return_value="A1"):
             self.assertTrue(self.player.shootField(self.opponent))
-        self.assertTrue(self.opponent._map.fields[0][0].fieldHit)
+        self.assertTrue(self.opponent._map.fields[0][0].fieldhit)
         self.assertEqual(self.opponent._map.shipTiles, 0)
 
     @patch("builtins.input", side_effect=["A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1", "S", "J10", "N",
@@ -48,8 +48,8 @@ class TestPlayer(unittest.TestCase):
     def test_place_ships(self, mock_input):
         self.player.placeShips()
         #Pruefen ob Schiff auf Feld gesetzt
-        self.assertTrue(self.player._map.fields[0][0].shipOnField)
+        self.assertTrue(self.player._map.fields[0][0].shiponfield)
         # Fieldhit muss nach setzen auf 0 bleiben
-        self.assertFalse(self.player._map.fields[0][0].fieldHit)
+        self.assertFalse(self.player._map.fields[0][0].fieldhit)
         #ShipTiles ist fest auf 30 im Code gesetzt
         self.assertEqual(self.player._map.shipTiles, 30)

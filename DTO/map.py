@@ -1,4 +1,4 @@
-from DTO.Field import Field
+from DTO.field import Field
 
 
 class Map:
@@ -32,7 +32,7 @@ class Map:
                 # iteration through tiles of current ship
                 for i in range(0, length):
                     # setting Ship on current field
-                    self.fields[xValue][yValue].shipOnField = True
+                    self.fields[xValue][yValue].shiponfield = True
 
                     # moving to next ship tile, depending on chosen orientation
                     values = self.__nextTile(xValue, yValue, orientation)
@@ -59,12 +59,12 @@ class Map:
             actualField = self.fields[xValue][yValue]
 
             # check if field has already been hit and report failure
-            if actualField.fieldHit:
+            if actualField.fieldhit:
                 print("Dieses Feld wurde bereits getroffen!")
                 return False
 
             # check if field has ship on it
-            elif actualField.shipOnField:
+            elif actualField.shiponfield:
                 print("Schiff wurde getroffen!")
 
                 # subtracting floating shipTiles. When it reaches 0, the game is lost.
@@ -73,7 +73,7 @@ class Map:
                 print("Daneben!")
 
             # set field to "already hit" and report successful hit
-            actualField.fieldHit = True
+            actualField.fieldhit = True
             return True
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'Map.hitField' aufgetreten! {e}")
@@ -104,7 +104,7 @@ class Map:
                         else:
 
                             # if there is already a ship on the field return fail
-                            if self.fields[xValue + j][yValue + k].shipOnField:
+                            if self.fields[xValue + j][yValue + k].shiponfield:
                                 return False
 
                 # check if the ship tile would be out of map, if so: return fail.

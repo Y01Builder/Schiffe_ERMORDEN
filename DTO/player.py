@@ -1,4 +1,4 @@
-from DTO.Map import Map
+from DTO.map import Map
 import re
 
 
@@ -18,9 +18,9 @@ class Player:
             for row in range(0, 10):
                 printable = [f"{row + 1}"]
                 for columns in range(0, 10):
-                    if self._map.fields[columns][row].shipOnField and showShips:
+                    if self.map.fields[columns][row].shiponfield and showShips:
                         printable.append(f"\tO")
-                    elif self._map.fields[columns][row].fieldHit:
+                    elif self.map.fields[columns][row].fieldhit:
                         printable.append(f"\tX")
                     else:
                         printable.append(f"\t~")
@@ -38,9 +38,9 @@ class Player:
                 if not validated:
                     print("Bitte versuchen Sie es erneut")
                 else:
-                    if opponent._map.hitField(validated):
+                    if opponent.map.hitField(validated):
                         repeat = False
-                        if opponent._map.shipTiles == 0:
+                        if opponent.map.shipTiles == 0:
                             return True
             return False
         except KeyboardInterrupt:
@@ -63,12 +63,13 @@ class Player:
                             print("Bitte versuchen Sie es erneut!")
                             repeat = True
                         else:
-                            repeat = not self._map.placeShips(splittedCoordinates, validatedOrientation, length)
-            return
+                            repeat = not self.map.placeShips(splittedCoordinates, validatedOrientation, length)
+            return True
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'placeShips' aufgetreten! {e}")
+        return False
 
     def _validateCoordinate(self, coordinate):
         try:
