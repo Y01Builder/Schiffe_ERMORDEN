@@ -1,96 +1,102 @@
-from DTO.map import Map
+"""import Map and regex"""
 import re
+from DTO.map import Map
 
 
 class Player:
-    __ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
+    """the player class contains all actions from the player like shoot,place ships and print map"""
+    _ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
     # __ships = [["Schlachtschiff", 5, 1]]
 
-    def __init__(self, name, id):
+    def __init__(self, name, playerid):
         self.name = name
-        self.id = id
-        self.map = Map(id)
+        self.playerid = playerid
+        self.map = Map(playerid)
 
-    def printMap(self, showShips):
+    def print_map(self, show_ships):
+        """prints the user map"""
         try:
-            print(f"\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ")
+            print("\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ")
             print("")
             for row in range(0, 10):
                 printable = [f"{row + 1}"]
                 for columns in range(0, 10):
-                    if self.map.fields[columns][row].shiponfield and showShips:
-                        printable.append(f"\tO")
+                    if self.map.fields[columns][row].shiponfield and show_ships:
+                        printable.append("\tO")
                     elif self.map.fields[columns][row].fieldhit:
-                        printable.append(f"\tX")
+                        printable.append("\tX")
                     else:
-                        printable.append(f"\t~")
+                        printable.append("\t~")
                 print(
-                    f"{printable[0]}{printable[1]}{printable[2]}{printable[3]}{printable[4]}{printable[5]}{printable[6]}{printable[7]}{printable[8]}{printable[9]}{printable[10]}")
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'printMap' aufgetreten! {e}")
+                    f"{printable[0]}{printable[1]}{printable[2]}{printable[3]}{printable[4]}{printable[5]}{printable[6]}"
+                    f"{printable[7]}{printable[8]}{printable[9]}{printable[10]}")
+        except IndexError:
+            print("Es ist ein Fehler 'player.print_map' bei der Verwendung des Indexes aufgetreten!")
 
-    def shootField(self, opponent):
+    def shoot_field(self, opponent):
+        """fire on the opponent field"""
         try:
             repeat = True
             while repeat:
-                coordinate = input(f"Bitte geben Sie die Koordinate des Zieles (z.B.B4) an!")
-                validated = opponent._validateCoordinate(coordinate)
+                coordinate = input("Bitte geben Sie die Koordinate des Zieles (z.B.B4) an!")
+                validated = opponent.validate_coordinate(coordinate)
                 if not validated:
                     print("Bitte versuchen Sie es erneut")
                 else:
-                    if opponent.map.hitField(validated):
+                    if opponent.map.hit_field(validated):
                         repeat = False
-                        if opponent.map.shipTiles == 0:
+                        if opponent.map.ship_tiles == 0:
                             return True
             return False
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'shootField' aufgetreten! {e}")
+            return False
 
-    def placeShips(self):
+    def place_ships(self):
+        """iterate all ships to set their orientation and coordinates"""
         try:
             for name, length, count in self.__ships:
-                for i in range(0, count):
+                for _ in range(0, count):
                     repeat = True
                     while repeat:
-                        self.printMap(showShips=True)
+                        self.print_map(show_ships=True)
                         coordinate = input(f"Bitte geben Sie die Startkoordinate für das Schiff {name} an! z.B. B4\n")
                         orientation = input(f"Bitte geben Sie die Orientierung für das Schiff {name} an! z.B. N, O, S, W\n")
-                        splittedCoordinates = self._validateCoordinate(coordinate)
-                        validatedOrientation = self._validateOrientation(orientation)
-                        if not splittedCoordinates or not validatedOrientation:
+                        splitted_coordinates = self.validate_coordinate(coordinate)
+                        validated_orientation = self._validate_orientation(orientation)
+                        if not splitted_coordinates or not validated_orientation:
                             print("Bitte versuchen Sie es erneut!")
                             repeat = True
                         else:
-                            repeat = not self.map.placeShips(splittedCoordinates, validatedOrientation, length)
+                            repeat = not self.map.place_ships(splitted_coordinates, validated_orientation, length)
             return True
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'placeShips' aufgetreten! {e}")
         return False
 
-    def _validateCoordinate(self, coordinate):
+    def validate_coordinate(self, coordinate):
+        """validate entered coordinate with regex"""
         try:
             pattern = re.compile("^([a-jA-J])([1-9]|[1][0])$")
             matches = pattern.match(coordinate)
             if matches:
                 return matches.groups()
-            else:
-                print("Die Eingabe der Koordinaten war nicht korrekt!")
-                return False
-        except Exception as e:
-            print(f"Bei der Validierung der Koordinaten ist ein Fehler aufgetreten! Bitte prüfen Sie die Werte! {e}")
 
-    def _validateOrientation(self, orientation):
+            print("Die Eingabe der Koordinaten war nicht korrekt!")
+            return False
+        except TypeError:
+            print("Bei der Validierung der Koordinaten ist ein Typen Fehler aufgetreten! Bitte prüfen Sie die Werte!")
+            return False
+
+    def _validate_orientation(self, orientation):
         try:
             pattern = re.compile("^[N,W,O,S]?$")
             matches = pattern.match(orientation)
             if matches:
                 return matches.string
-            else:
-                print("Die Eingabe der Orientierung war nicht korrekt!")
-                return False
-        except Exception as e:
-            print(f"Bei der Validierung der Orientierung ist ein Fehler aufgetreten! Bitte prüfen Sie die Werte! {e}")
+
+            print("Die Eingabe der Orientierung war nicht korrekt!")
+            return False
+        except TypeError:
+            print("Bei der Validierung der Orientierung ist ein Typen Fehler aufgetreten! Bitte prüfen Sie die Werte!")
+            return False

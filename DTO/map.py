@@ -1,14 +1,16 @@
+"""import the field class"""
 from DTO.field import Field
 
 
 class Map:
+    """the map class manages the activities on the map with validation"""
     # Number of rows and columns
     ROWS = 10
     COLUMNS = 10
 
-    def __init__(self, ownerId):
+    def __init__(self, ownerid):
         # Player ID
-        self.ownerId = ownerId
+        self.ownerid = ownerid
         # 2D-Array containing Field Objects
         self.fields: list[list[Field]] = []
         ''' 
@@ -16,28 +18,29 @@ class Map:
         (gets subtracted by one for each hit) 
         Player wins, when opponent is 0
         '''
-        self.shipTiles = 30
+        self.ship_tiles = 30
         # initializing Map
-        self.__initMap()
+        self.__init_map()
 
-    def placeShips(self, coordinate, orientation, length):
+    def place_ships(self, coordinate, orientation, length):
+        """place the ship with coordinate, orientation and length"""
         try:
             # translating Input (i.e. A8) to X & Y coordinates
-            xValue = ord(coordinate[0].lower()) - 97
-            yValue = int(coordinate[1]) - 1
+            x_value = ord(coordinate[0].lower()) - 97
+            y_value = int(coordinate[1]) - 1
 
             # validating X & Y values + checking spacing around ship
-            if self.__validateShipPlacement(xValue, yValue, orientation, length):
+            if self.__validate_ship_placement(x_value, y_value, orientation, length):
 
                 # iteration through tiles of current ship
-                for i in range(0, length):
+                for _ in range(0, length):
                     # setting Ship on current field
-                    self.fields[xValue][yValue].shiponfield = True
+                    self.fields[x_value][y_value].shiponfield = True
 
                     # moving to next ship tile, depending on chosen orientation
-                    values = self.__nextTile(xValue, yValue, orientation)
-                    xValue = values[0]
-                    yValue = values[1]
+                    values = self.__next_tile(x_value, y_value, orientation)
+                    x_value = values[0]
+                    y_value = values[1]
 
             else:
                 # return info, that placement has failed. Function will be called again.
@@ -46,97 +49,99 @@ class Map:
 
             # return info, that placement has been successful.
             return True
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'Map.placeShips' aufgetreten! {e}")
+        except IndexError:
+            print("Es ist ein Fehler 'Map.place_ships' bei der Index Verwendung aufgetreten!")
+            return False
 
-    def hitField(self, coordinate):
+    def hit_field(self, coordinate):
+        """hit the field with the given coordinate"""
         try:
             # translating Input (i.e. A8) to X & Y coordinates
-            xValue = ord(coordinate[0].lower()) - 97
-            yValue = int(coordinate[1]) - 1
+            x_value = ord(coordinate[0].lower()) - 97
+            y_value = int(coordinate[1]) - 1
 
-            # setting actualField to X & Y values
-            actualField = self.fields[xValue][yValue]
+            # setting actual_field to X & Y values
+            actual_field = self.fields[x_value][y_value]
 
             # check if field has already been hit and report failure
-            if actualField.fieldhit:
+            if actual_field.fieldhit:
                 print("Dieses Feld wurde bereits getroffen!")
                 return False
 
             # check if field has ship on it
-            elif actualField.shiponfield:
+            if actual_field.shiponfield:
                 print("Schiff wurde getroffen!")
 
-                # subtracting floating shipTiles. When it reaches 0, the game is lost.
-                self.shipTiles -= 1
+                # subtracting floating ship_tiles. When it reaches 0, the game is lost.
+                self.ship_tiles -= 1
             else:
                 print("Daneben!")
 
             # set field to "already hit" and report successful hit
-            actualField.fieldhit = True
+            actual_field.fieldhit = True
             return True
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'Map.hitField' aufgetreten! {e}")
+        except IndexError:
+            print("Es ist ein Fehler in der Funktion 'Map.hit_field' bei der Index Verwendung aufgetreten!")
+            return False
 
-    def __initMap(self):
-        try:
-            # filling the 2D Array with field objects
-            for i in range(self.ROWS):
-                currentRow = []
-                for j in range(self.COLUMNS):
-                    # new field objects are not hit and have no ship on it
-                    currentRow.append(Field(False, False))
-                self.fields.append(currentRow)
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'Map.__initMap' aufgetreten! {e}")
+    def __init_map(self):
+        # filling the 2D Array with field objects
+        for _ in range(self.ROWS):
+            current_row = []
+            for _ in range(self.COLUMNS):
+                # new field objects are not hit and have no ship on it
+                current_row.append(Field(False, False))
+            self.fields.append(current_row)
 
-    def __validateShipPlacement(self, xValue, yValue, orientation, length):
+    def __validate_surrounding_fields(self, x_value, y_value):
+        # iterating through the 9 surrounding fields of each ship tile
+        for j in range(-1, 2):
+            for k in range(-1, 2):
+
+                # check if fields are out of map, if so: skip ship check
+                if x_value + j < 0 or x_value + j >= 10 or y_value + k < 0 or y_value + k >= 10:
+                    continue
+                # if there is already a ship on the field return fail
+                if self.fields[x_value + j][y_value + k].shiponfield:
+                    return False
+        return True
+
+    def __validate_ship_placement(self, x_value, y_value, orientation, length):
         try:
             # iterating through the number of ship tiles
-            for i in range(0, length):
-                # iterating through the 9 surrounding fields of each ship tile
-                for j in range(-1, 2):
-                    for k in range(-1, 2):
-
-                        # check if fields are out of map, if so: skip ship check
-                        if xValue + j < 0 or xValue + j >= 10 or yValue + k < 0 or yValue + k >= 10:
-                            continue
-                        else:
-
-                            # if there is already a ship on the field return fail
-                            if self.fields[xValue + j][yValue + k].shiponfield:
-                                return False
+            for _ in range(0, length):
+                # check surrounding fields for shiponfield or out of map
+                if not self.__validate_surrounding_fields(x_value, y_value):
+                    return False
 
                 # check if the ship tile would be out of map, if so: return fail.
-                if xValue < 0 or xValue >= 10:
+                if x_value < 0 or x_value >= 10:
                     return False
-                elif yValue < 0 or yValue >= 10:
+                if y_value < 0 or y_value >= 10:
                     return False
 
                 # moving to next ship tile, depending on chosen orientation
-                values = self.__nextTile(xValue, yValue, orientation)
+                values = self.__next_tile(x_value, y_value, orientation)
                 # empty returned tuple into the corresponding value
-                xValue = values[0]
-                yValue = values[1]
+                x_value = values[0]
+                y_value = values[1]
 
             # after iterating through the entire ship: return successful validation
             return True
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'Map.__validateShipPlacement' aufgetreten! {e}")
+        except IndexError:
+            print("Es ist ein Fehler 'Map.__validate_ship_placement' bei der Verwendung des Indexes aufgetreten!")
+            return False
 
-    def __nextTile(self, xValue, yValue, orientation):
-        try:
-            # move current Tile coordinates to the following tile in given orientation
-            if orientation == "S":
-                yValue += 1
-            elif orientation == "N":
-                yValue -= 1
-            elif orientation == "W":
-                xValue -= 1
-            elif orientation == "O":
-                xValue += 1
+    def __next_tile(self, x_value, y_value, orientation):
+        # move current Tile coordinates to the following tile in given orientation
+        if orientation == "S":
+            y_value += 1
+        elif orientation == "N":
+            y_value -= 1
+        elif orientation == "W":
+            x_value -= 1
+        elif orientation == "O":
+            x_value += 1
 
-            # return coordinates as a tuple
-            return xValue, yValue
-        except Exception as e:
-            print(f"Es ist ein Fehler in der Funktion 'Map.__nextTile' aufgetreten! {e}")
+        # return coordinates as a tuple
+        return x_value, y_value

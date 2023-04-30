@@ -23,8 +23,8 @@ class Game:
             print("")
 
             # if save files exist: try to load them.
-            if os.path.exists(rf"{self.path}\mapPlayer{self.player1.id + 1}.pickle") and os.path.exists(
-                    rf"{self.path}\mapPlayer{self.player2.id + 1}.pickle"):
+            if os.path.exists(rf"{self.path}\mapPlayer{self.player1.playerid + 1}.pickle") and os.path.exists(
+                    rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
                 self.player1 = self.__load_game(self.player1)
                 self.player2 = self.__load_game(self.player2)
 
@@ -92,20 +92,20 @@ class Game:
             return False
 
     def __set_ships(self, player):
-        # call the placeShips function on the new player
+        # call the place_ships function on the new player
         print(f"{player.name}! Setze deine Schiffe!")
-        return player.placeShips()
+        return player.place_ships()
 
     def __player_turn(self, player, opponent):
         # prints ASCII art of the player
-        self.__print_player(player.id)
+        self.__print_player(player.playerid)
 
         # show maps of opponent (top) and player (bottom)
-        opponent.printMap(showShips=False)
-        player.printMap(showShips=True)
+        opponent.print_map(show_ships=False)
+        player.print_map(show_ships=True)
 
-        # the loop will break, if the shootField method returns end of game
-        if player.shootField(opponent):
+        # the loop will break, if the shoot_field method returns end of game
+        if player.shoot_field(opponent):
             self.end_game(player)
             return True
 
@@ -118,7 +118,7 @@ class Game:
     def __save_map(self, player):
         try:
             # save the player object into the mapPlayerX.pickle file
-            with open(f"mapPlayer{player.id + 1}.pickle", "wb") as file:
+            with open(f"mapPlayer{player.playerid + 1}.pickle", "wb") as file:
                 pickle.dump(player, file)
         except IOError:
             print("Fehler beim schreiben/lesen der Datei in __save_map")
@@ -128,7 +128,7 @@ class Game:
     def __load_game(self, player):
         try:
             # load the player object from the mapPlayerX.pickle file
-            with open(f"mapPlayer{player.id + 1}.pickle", "rb") as file:
+            with open(f"mapPlayer{player.playerid + 1}.pickle", "rb") as file:
                 player = pickle.load(file)
             # return the player object
             return player

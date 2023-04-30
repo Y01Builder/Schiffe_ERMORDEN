@@ -1,4 +1,6 @@
+"""import os and sys"""
 import os
+import sys
 
 from DTO.game import Game
 
@@ -22,8 +24,6 @@ if __name__ == '__main__':
 
             else:
                 again = False
-        exit(0)
+        sys.exit(0)
     except KeyboardInterrupt:
         print("Sie haben das Spiel mit Ihrer Eingabe abgebrochen!")
-    except Exception as e:
-        print(f"Es ist ein Fehler in der Funktion 'main' aufgetreten! {e}")
