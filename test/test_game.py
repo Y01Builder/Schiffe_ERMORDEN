@@ -62,3 +62,15 @@ class TestGame(unittest.TestCase):
         loaded_player = self.game._Game__load_game(player)
         self.assertEqual(player.name, loaded_player.name)
 
+    def test_start_game(self):
+        #with patch('builtins.input', side_effect=["Mario",
+        #"A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O",
+        #"Yannick",
+        #"A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O"]):
+        with patch('builtins.input', side_effect=["Mario",
+        "A1", "S",
+        "Yannick",
+        "A1", "S",
+        "A1", "A1", "A2", "A2", "A3", "A3", "A4", "A4", "A5", "A5"]):
+            self.game.start_game()
+

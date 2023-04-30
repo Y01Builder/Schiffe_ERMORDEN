@@ -90,7 +90,7 @@ class Player:
 
     def _validate_orientation(self, orientation):
         try:
-            pattern = re.compile("^[N,W,O,S]?$")
+            pattern = re.compile("^[N,W,O,S]$")
             matches = pattern.match(orientation)
             if matches:
                 return matches.string
