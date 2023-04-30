@@ -4,12 +4,12 @@ import re
 
 class Player:
     __ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-    #__ships = [["Schlachtschiff", 5, 1]]
+    # __ships = [["Schlachtschiff", 5, 1]]
 
     def __init__(self, name, id):
         self.name = name
         self.id = id
-        self.__map = Map(id)
+        self._map = Map(id)
 
     def printMap(self, showShips):
         try:
@@ -18,34 +18,33 @@ class Player:
             for row in range(0, 10):
                 printable = [f"{row + 1}"]
                 for columns in range(0, 10):
-                    if self.__map.fields[columns][row].shipOnField and showShips:
+                    if self._map.fields[columns][row].shipOnField and showShips:
                         printable.append(f"\tO")
-                    elif self.__map.fields[columns][row].fieldHit:
+                    elif self._map.fields[columns][row].fieldHit:
                         printable.append(f"\tX")
                     else:
                         printable.append(f"\t~")
                 print(
                     f"{printable[0]}{printable[1]}{printable[2]}{printable[3]}{printable[4]}{printable[5]}{printable[6]}{printable[7]}{printable[8]}{printable[9]}{printable[10]}")
         except Exception as e:
-                print(f"Es ist ein Fehler in der Funktion 'printMap' aufgetreten! {e}")
+            print(f"Es ist ein Fehler in der Funktion 'printMap' aufgetreten! {e}")
 
     def shootField(self, opponent):
         try:
             repeat = True
             while repeat:
                 coordinate = input(f"Bitte geben Sie die Koordinate des Zieles (z.B.B4) an!")
-                validated = opponent.__validateCoordinate(coordinate)
+                validated = opponent._validateCoordinate(coordinate)
                 if not validated:
                     print("Bitte versuchen Sie es erneut")
                 else:
-                    if opponent.__map.hitField(validated):
+                    if opponent._map.hitField(validated):
                         repeat = False
-                        if opponent.__map.shipTiles == 0:
+                        if opponent._map.shipTiles == 0:
                             return True
             return False
-
         except Exception as e:
-                print(f"Es ist ein Fehler in der Funktion 'shootField' aufgetreten! {e}")
+            print(f"Es ist ein Fehler in der Funktion 'shootField' aufgetreten! {e}")
 
     def placeShips(self):
         try:
@@ -56,20 +55,20 @@ class Player:
                         self.printMap(showShips=True)
                         coordinate = input(f"Bitte geben Sie die Startkoordinate für das Schiff {name} an! z.B. B4\n")
                         orientation = input(f"Bitte geben Sie die Orientierung für das Schiff {name} an! z.B. N, O, S, W\n")
-                        splittedCoordinates = self.__validateCoordinate(coordinate)
-                        validatedOrientation = self.__validateOrientation(orientation)
+                        splittedCoordinates = self._validateCoordinate(coordinate)
+                        validatedOrientation = self._validateOrientation(orientation)
                         if not splittedCoordinates or not validatedOrientation:
                             print("Bitte versuchen Sie es erneut!")
                             repeat = True
                         else:
-                            repeat = not self.__map.placeShips(splittedCoordinates, validatedOrientation, length)
+                            repeat = not self._map.placeShips(splittedCoordinates, validatedOrientation, length)
             return
         except Exception as e:
-                print(f"Es ist ein Fehler in der Funktion 'placeShips' aufgetreten! {e}")
+            print(f"Es ist ein Fehler in der Funktion 'placeShips' aufgetreten! {e}")
 
-    def __validateCoordinate(self, coordinate):
+    def _validateCoordinate(self, coordinate):
         try:
-            pattern = re.compile("^([a-jA-J])([1-9]|[1][0])?$")
+            pattern = re.compile("^([a-jA-J])([1-9]|[1][0])$")
             matches = pattern.match(coordinate)
             if matches:
                 return matches.groups()
@@ -79,7 +78,7 @@ class Player:
         except Exception as e:
             print(f"Bei der Validierung der Koordinaten ist ein Fehler aufgetreten! Bitte prüfen Sie die Werte! {e}")
 
-    def __validateOrientation(self, orientation):
+    def _validateOrientation(self, orientation):
         try:
             pattern = re.compile("^[N,W,O,S]?$")
             matches = pattern.match(orientation)
