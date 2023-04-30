@@ -3,8 +3,8 @@ import re
 
 
 class Player:
-    __ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-    # __ships = [["Schlachtschiff", 5, 1]]
+    _ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
+    # _ships = [["Schlachtschiff", 5, 1]]
 
     def __init__(self, name, id):
         self.name = name
