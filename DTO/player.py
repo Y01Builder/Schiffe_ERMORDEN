@@ -6,7 +6,7 @@ from DTO.map import Map
 class Player:
     """the player class contains all actions from the player like shoot,place ships and print map"""
     _ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-    # __ships = [["Schlachtschiff", 5, 1]]
+    # _ships = [["Schlachtschiff", 5, 1]]
 
     def __init__(self, name, playerid):
         self.name = name
@@ -55,7 +55,7 @@ class Player:
     def place_ships(self):
         """iterate all ships to set their orientation and coordinates"""
         try:
-            for name, length, count in self.__ships:
+            for name, length, count in self._ships:
                 for _ in range(0, count):
                     repeat = True
                     while repeat:

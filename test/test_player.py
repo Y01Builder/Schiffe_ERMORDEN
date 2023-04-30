@@ -1,4 +1,6 @@
 #pylint: disable=C
+#pylint: disable=W0212
+
 import unittest
 from unittest.mock import patch
 from DTO.player import Player
@@ -46,7 +48,7 @@ class TestPlayer(unittest.TestCase):
 
     @patch("builtins.input", side_effect=["A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1", "S", "J10", "N",
                                           "A8", "O", "J7", "W", "F2", "O"])
-    def test_place_ships(self, mock_input):
+    def test_place_ships(self, mock):
         self.player.place_ships()
         #Pruefen ob Schiff auf Feld gesetzt
         self.assertTrue(self.player.map.fields[0][0].shiponfield)

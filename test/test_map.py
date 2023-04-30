@@ -70,13 +70,13 @@ class MapTests(unittest.TestCase):
 
     def test_validateShipPlacement_valid(self):
         # Testet, ob ein Schiff an einer gültigen Position platziert werden kann
-        result = self.map._Map__validateShipPlacement(0, 0, "S", 3)
+        result = self.map._Map__validate_ship_placement(0, 0, "S", 3)
         self.assertTrue(result)
 
     def test_validateShipPlacement_invalid(self):
         # Testet, ob ein Schiff an einer ungültigen Position platziert werden kann
         # (Schiff kollidiert mit einem bereits platzierten Schiff)
         self.map.fields[0][0].shiponfield = True
-        result = self.map._Map__validateShipPlacement(0, 0, "S", 3)
+        result = self.map._Map__validate_ship_placement(0, 0, "S", 3)
         self.assertFalse(result)
 
