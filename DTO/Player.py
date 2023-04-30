@@ -9,7 +9,7 @@ class Player:
     def __init__(self, name, id):
         self.name = name
         self.id = id
-        self._map = Map(id)
+        self.map = Map(id)
 
     def printMap(self, showShips):
         try:
@@ -43,6 +43,8 @@ class Player:
                         if opponent._map.shipTiles == 0:
                             return True
             return False
+        except KeyboardInterrupt:
+            print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'shootField' aufgetreten! {e}")
 
@@ -63,6 +65,8 @@ class Player:
                         else:
                             repeat = not self._map.placeShips(splittedCoordinates, validatedOrientation, length)
             return
+        except KeyboardInterrupt:
+            print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'placeShips' aufgetreten! {e}")
 

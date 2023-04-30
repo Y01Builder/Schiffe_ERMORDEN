@@ -78,3 +78,4 @@ class MapTests(unittest.TestCase):
         self.map.fields[0][0].shipOnField = True
         result = self.map._Map__validateShipPlacement(0, 0, "S", 3)
         self.assertFalse(result)
+

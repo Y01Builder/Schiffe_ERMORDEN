@@ -28,7 +28,6 @@ class Game:
                     self.player1 = self.__loadGame(self.player1)
                     self.player2 = self.__loadGame(self.player2)
                 except:
-
                     # create new players, when the save file can not be loaded
                     print("Ein Fehler ist beim Laden aufgetreten! Erstelle neue Spieler.")
                     self.player1 = self.__createPlayer(0)
@@ -89,6 +88,8 @@ class Game:
 
             # return the player object
             return player
+        except KeyboardInterrupt:
+            print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'Game.__createPlayer' aufgetreten! {e}")
 
@@ -97,7 +98,7 @@ class Game:
             # call the placeShips function on the new player
             print(f"{player.name}! Setze deine Schiffe!")
             player.placeShips()
-            return
+            return True
         except Exception as e:
             print(f"Es ist ein Fehler in der Funktion 'Game.__setShips' aufgetreten! {e}")
 
