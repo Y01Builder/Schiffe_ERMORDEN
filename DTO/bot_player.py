@@ -13,18 +13,17 @@ class BotPlayer(Player):
         else:
             return False
 
-    def shoot_field(self, opponent): 
-        ship_fields = [[]]
+    def shoot_field(self, opponent):
         repeat = True
         while repeat:
-            coordinate = __shoot_cords(opponent, ship_fields)            
+            coordinate = __shoot_cords(opponent)            
             if opponent.map.hit_field(coordinate):
                 repeat = False
                 if opponent.map.ship_tiles == 0:
                     return True
         return False
 
-    def __shoot_cords(self, opponent, ship_fields):
+    def __shoot_cords(self, opponent):
         valid_hit = False
         while not valid_hit:
             match __difficulty:
