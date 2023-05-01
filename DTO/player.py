@@ -89,6 +89,7 @@ class Player:
                         repeat = False
                         self.turn = False
                         opponent.turn = True
+                        input("Drücke Enter um fortzufahren...")
 
                         # return end of game, when the last ship tile of the opponent has been sunk.
                         if opponent.map.ship_tiles == 0:
