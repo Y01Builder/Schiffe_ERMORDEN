@@ -261,7 +261,7 @@ class BotPlayer(Player):
 
         if opponent.map.fields[tmp_y][tmp_x].get_ship_on_field():
             self.__statistic_matrix[tmp_y][tmp_x] = 0
-            """
+
             if (tmp_y-1)>=0:
                 self.__statistic_matrix[(tmp_y-1)][(tmp_x)] += 5
 
@@ -288,7 +288,6 @@ class BotPlayer(Player):
 
                 if (tmp_x+1)<=9:
                     self.__statistic_matrix[(tmp_y+1)][(tmp_x+1)] = 0
-            """
         else:
             self.__statistic_matrix[tmp_y][tmp_x] = 0
 
