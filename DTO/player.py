@@ -90,9 +90,6 @@ class Player:
                         self.turn = False
                         opponent.turn = True
 
-                        # check before going to the next player, as to stop the opponent from seeing your map
-                        input("Nächster Spieler bereit?")
-
                         # return end of game, when the last ship tile of the opponent has been sunk.
                         if opponent.map.ship_tiles == 0:
                             return True
