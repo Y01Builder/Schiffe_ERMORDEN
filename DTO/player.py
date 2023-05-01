@@ -34,8 +34,8 @@ class Player:
                 # iterate through columns of the map
                 for columns in range(0, 10):
 
-                    if self.__map.fields[columns][row].shipOnField:
-                        if self.__map.fields[columns][row].fieldHit:
+                    if self.map.fields[columns][row].shiponfield:
+                        if self.map.fields[columns][row].fieldhit:
                             # add Ø when there is a ship and it is hit
                             printable.append(f"\tØ")
 
@@ -47,7 +47,7 @@ class Player:
                             # add ~ when there is a ship that has not been hit and the user has no permission to see it
                             printable.append(f"\t~")
 
-                    elif self.__map.fields[columns][row].fieldHit:
+                    elif self.map.fields[columns][row].fieldhit:
                         # add X when there is no ship and the field is hit
                         printable.append(f"\tX")
 
