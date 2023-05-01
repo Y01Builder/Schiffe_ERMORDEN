@@ -57,7 +57,7 @@ class TestGame(unittest.TestCase):
 
     def test_load_game(self):
         player = Player('Mario', 0)
-        with open('testPlayer1.pickle', 'wb') as file:
+        with open('mapPlayer1.pickle', 'wb') as file:
             pickle.dump(player, file)
         loaded_player = self.game._Game__load_game(player)
         self.assertEqual(player.name, loaded_player.name)

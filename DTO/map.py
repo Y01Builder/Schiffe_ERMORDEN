@@ -18,7 +18,7 @@ class Map:
         (gets subtracted by one for each hit) 
         Player wins, when opponent is 0
         '''
-        self.ship_tiles = 30
+        self.ship_tiles = 0
         # initializing Map
         self.__init_map()
 
@@ -34,8 +34,9 @@ class Map:
 
                 # iteration through tiles of current ship
                 for _ in range(0, length):
-                    # setting Ship on current field
+                    # setting Ship on current field and adding to number of floating ship tiles
                     self.fields[x_value][y_value].shiponfield = True
+                    self.ship_tiles += 1
 
                     # moving to next ship tile, depending on chosen orientation
                     values = self.__next_tile(x_value, y_value, orientation)

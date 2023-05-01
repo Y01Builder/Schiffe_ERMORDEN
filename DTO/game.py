@@ -45,6 +45,10 @@ class Game:
                 # clear the screen
                 self.clear()
 
+                # check before going to the (next) player, as to stop the opponent from seeing your map
+                input("Spieler bereit?")
+                print("")
+
                 # check if it is player 1's turn
                 if self.player1.turn and not self.player2.turn:
 
