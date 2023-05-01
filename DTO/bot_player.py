@@ -17,8 +17,14 @@ class BotPlayer(Player):
 
     Methods:
     --------
+        __init__(name: String, playerid: int, difficulty: int, optional)
+            Initializes a new instance of the class BotPlayer.
+        
         set_difficulty(difficulty: int) -> bool:
             Sets the difficulty level of the bot player.
+
+        reset_statistic_table():
+            Resets the __statistic_matrix attribute to its initial values.
 
         shoot_field(opponent: Player) -> bool:
             Shoots at a field on the opponent player's map.
@@ -32,14 +38,41 @@ class BotPlayer(Player):
         __get_placement(length: int, ship_fields: List[List[int]]) -> Tuple[List[str], List[str]]:
             Generates placement coordinates for a ship on the bot player's map.
 
-        reset_statistic_table():
-            Resets the __statistic_matrix attribute to its initial values.
-
-        __statistics_bitch(opponent: Player) -> List[str]:
+        __statistical_analysis(opponent: Player) -> List[str]:
             Analyzes the probabilities of randomly placed ships and each shot fired
             to determine the most likely target to shoot at.
+
+
+
+
+    Initializes a new instance of the class BotPlayer,
+    with the specified name, player ID, and optional difficulty level.
+    It also set the __statistic_matrix to its initial values.
+
+    Parameters:
+    -----------
+        name : str
+            The name of the player.
+        playerid : int
+            The ID of the player.
+        difficulty : int, optional
+            The difficulty level of the game, default is 1.
     """
-    __difficulty = 1
+    def __init__(self, name, playerid, difficulty=1):
+        super().__init__(name, playerid)
+        self.__difficulty = difficulty
+        self.__statistic_matrix = [
+        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
+        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
+        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
+        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
+        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
+        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
+        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
+        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
+        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
+        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]]
+
 
     def set_difficulty(self, difficulty):
         """
@@ -55,12 +88,27 @@ class BotPlayer(Player):
             bool
                 True if the difficulty is set successfully, False otherwise.
         """
-        if difficulty >= 0:
-            if difficulty <= 2:
-                self.__difficulty = difficulty
-                self.reset_statistic_table()
-                return True
+        if 0 <= difficulty <= 2:
+            self.__difficulty = difficulty
+            self.reset_statistic_table()
+            return True
         return False
+
+    def reset_statistic_table(self):
+        """
+        Resets the __statistic_matrix attribute to its initial values.
+        """
+        self.__statistic_matrix = [
+        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
+        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
+        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
+        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
+        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
+        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
+        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
+        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
+        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
+        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]]
 
     def shoot_field(self, opponent):
         """
@@ -112,15 +160,14 @@ class BotPlayer(Player):
                     continue
                 case 1:
                     valid_hit = True
-                    target = self.__statistics_bitch(opponent)
+                    target = self.__statistical_analysis(opponent)
                     return target
                 case 2:
                     for trgt_y, row in enumerate(opponent.map):
                         for trgt_x, field in enumerate(row):
-                            if field.get_ship_on_field():
-                                if not field.get_field_hit():
-                                    valid_hit = True
-                                    return [chr(trgt_x+97),trgt_y+1]
+                            if field.get_ship_on_field() and not field.get_field_hit():
+                                valid_hit = True
+                                return [chr(trgt_x+97),trgt_y+1]
                     continue
         return False
 
@@ -155,7 +202,9 @@ class BotPlayer(Player):
         """
         not_good = True
         while not_good:
+
             orientation = randint(0, 3) # 0 = north, 1 = east, 2 = south, 3 = west
+
             match orientation:
                 case 0: # north
                     ori = ['N']
@@ -163,18 +212,21 @@ class BotPlayer(Player):
                     strt_x = randint(0, 9)
                     end_y = strt_y-(length-1)
                     end_x = strt_x
+
                 case 1: # east
                     ori = ['O']
                     strt_y = randint(0, 9)
                     strt_x = randint(0, 10-length)
                     end_y = strt_y
                     end_x = strt_x+(length-1)
+
                 case 2: # south
                     ori = ['S']
                     strt_y = randint(0, 10-length)
                     strt_x = randint(0, 9)
                     end_y = strt_y+(length-1)
                     end_x = strt_x
+
                 case 3: # west
                     ori = ['W']
                     strt_y = randint(0, 9)
@@ -184,21 +236,18 @@ class BotPlayer(Player):
 
             not_good = False
             for shp_x,shp_y in ship_fields:
-                if strt_x-1 <= shp_x:
-                    if shp_x <= strt_x+1:
-                        if strt_y-1 <= shp_y:
-                            if shp_y <= strt_y+1:
-                                not_good = True
+                # Check if start coordinate isn´t on a occupied field
+                if strt_x-1 <= shp_x <= strt_x+1 and strt_y-1 <= shp_y <= strt_y+1:
+                    not_good = True
 
-                if end_x-1 <= shp_x:
-                    if shp_x <= end_x+1:
-                        if end_y-1 <= shp_y:
-                            if shp_y <= end_y+1:
-                                not_good = True
+                # Check if end coordinate isn´t on a occupied field
+                if end_x-1 <= shp_x <= end_x+1 and end_y-1 <= shp_y <= end_y+1:
+                    not_good = True
 
 
         ship_fields.append([strt_x,strt_y])
         if length==5:
+            # If the ship is a carrier the middle is also a significant ship field
             btwn_x = strt_x if strt_x == end_x else (end_x+strt_x)/2
             btwn_y = strt_y if strt_y == end_y else (end_y+strt_y)/2
             ship_fields.append([btwn_x,btwn_y])
@@ -207,36 +256,11 @@ class BotPlayer(Player):
         coords = [chr(strt_x+97), str(strt_y+1)]
         return ori, coords
 
-    __statistic_matrix = [
-    [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
-    [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
-    [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
-    [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
-    [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
-    [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
-    [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
-    [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
-    [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
-    [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]]
-
-    def reset_statistic_table(self):
-        """
-        Resets the __statistic_matrix attribute to its initial values.
-        """
-        self.__statistic_matrix = [
-        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
-        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
-        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
-        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
-        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
-        [40, 50, 56, 59, 60, 60, 59, 56, 50, 40],
-        [39, 49, 55, 58, 59, 59, 58, 55, 49, 39],
-        [36, 46, 52, 55, 56, 56, 55, 52, 46, 36],
-        [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
-        [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]]
-
-
-    def __statistics_bitch(self, opponent):
+    #pylint: disable=too-many-branches
+    #pylint: disable=too-many-statements
+    #The __statistical_analysis has a lot of hardly to simplify/externalize statements,
+    #which all have to be check before they can be applied
+    def __statistical_analysis(self, opponent):
         """
         Update the probability matrix that the bot uses to decide where to shoot
         based on the current state of the game and the behavior of the opponent. 
@@ -251,7 +275,7 @@ class BotPlayer(Player):
             List[str, int]
                 A list containing the coordinates to shoot at
         """
-        tmp, tmp_x, tmp_y = -1
+        tmp, tmp_x, tmp_y =  -1, -1, -1
         for trgt_y, row in enumerate(self.__statistic_matrix):
             for trgt_x, score in enumerate(row):
                 if score > tmp:
@@ -263,31 +287,32 @@ class BotPlayer(Player):
             self.__statistic_matrix[tmp_y][tmp_x] = 0
 
             if (tmp_y-1)>=0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] += 5
+                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] += 20
 
                 if (tmp_x-1)>=0:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 5
+                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 20
                     self.__statistic_matrix[(tmp_y-1)][(tmp_x-1)] = 0
 
                 if (tmp_x+1)<=9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 5
+                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 20
                     self.__statistic_matrix[(tmp_y-1)][(tmp_x+1)] = 0
 
             else:
                 if (tmp_x-1)>=0:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 5
+                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 20
 
                 if (tmp_x+1)<=9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 5
+                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 20
 
             if (tmp_y+1)<=9:
-                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] += 5
+                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] += 20
 
                 if (tmp_x-1)>=0:
                     self.__statistic_matrix[(tmp_y+1)][(tmp_x-1)] = 0
 
                 if (tmp_x+1)<=9:
                     self.__statistic_matrix[(tmp_y+1)][(tmp_x+1)] = 0
+
         else:
             self.__statistic_matrix[tmp_y][tmp_x] = 0
 
