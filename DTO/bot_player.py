@@ -60,8 +60,9 @@ class BotPlayer(Player):
     def __init__(self, name, playerid, difficulty=1):
         super().__init__(name, playerid)
         self.is_bot = True
-        self.difficulty = difficulty        
-        self._ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
+        self.difficulty = difficulty
+        self._ships = [
+        ["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
         self.__statistic_matrix = [
         [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
         [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
@@ -129,11 +130,12 @@ class BotPlayer(Player):
         while repeat:
             coordinate = self.__shoot_cords(opponent)
             if opponent.map.hit_field(coordinate):
-                # when the hit was successful: stop the loop, end your turn and set turn of next player
+                # when the hit was successful:
+                # stop the loop, end your turn and set turn of next player
                 repeat = False
                 self.turn = False
                 opponent.turn = True
-                
+
                 # return end of game, when the last ship tile of the opponent has been sunk.
                 if opponent.map.ship_tiles == 0:
                     return True
@@ -250,7 +252,7 @@ class BotPlayer(Player):
                 if end_x-1 <= shp_x <= end_x+1 and end_y-1 <= shp_y <= end_y+1:
                     not_good = True
 
-
+        # Add significant ship field to ship_fields
         ship_fields.append([strt_x,strt_y])
         if length==5:
             # If the ship is a carrier the middle is also a significant ship field
@@ -262,10 +264,8 @@ class BotPlayer(Player):
         coords = [chr(strt_x+97), str(strt_y+1)]
         return ori, coords
 
+
     #pylint: disable=too-many-branches
-    #pylint: disable=too-many-statements
-    #The __statistical_analysis has a lot of hardly to simplify/externalize statements,
-    #which all have to be check before they can be applied
     def __statistical_analysis(self, opponent):
         """
         Update the probability matrix that the bot uses to decide where to shoot
@@ -282,148 +282,63 @@ class BotPlayer(Player):
                 A list containing the coordinates to shoot at
         """
         tmp, tmp_x, tmp_y =  -1, -1, -1
-        for trgt_y, row in enumerate(self.__statistic_matrix):
+        matrix = self.__statistic_matrix
+
+        # Find the highest score in the probability matrix and saves its coordinates
+        for trgt_y, row in enumerate(matrix):
             for trgt_x, score in enumerate(row):
                 if score > tmp:
                     tmp = score
-                    tmp_y = trgt_y
-                    tmp_x = trgt_x
+                    tmp_y, tmp_x = trgt_y, trgt_x
 
+        # Check whether there is a ship on that coordinate or not
         if opponent.map.fields[tmp_y][tmp_x].get_ship_on_field():
-            self.__statistic_matrix[tmp_y][tmp_x] = 0
 
-            if (tmp_y-1)>=0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] += 20
+            # If no ship is on that field, the probability of it to obtain a hidden ship is zero
+            matrix[tmp_y][tmp_x] = 0
 
-                if (tmp_x-1)>=0:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 20
-                    self.__statistic_matrix[(tmp_y-1)][(tmp_x-1)] = 0
+            # Also the probability on all fields diagonally to it is zero and
+            # the probability of all other fields to have a hidden ship field increases by 20
+            for mod_y in range(-1, 2):
+                for mod_x in range(-1, 2):
+                    if mod_y == 0 and mod_x == 0:
+                        continue
 
-                if (tmp_x+1)<=9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 20
-                    self.__statistic_matrix[(tmp_y-1)][(tmp_x+1)] = 0
-
-            else:
-                if (tmp_x-1)>=0:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x-1)] += 20
-
-                if (tmp_x+1)<=9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] += 20
-
-            if (tmp_y+1)<=9:
-                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] += 20
-
-                if (tmp_x-1)>=0:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x-1)] = 0
-
-                if (tmp_x+1)<=9:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x+1)] = 0
+                    # mtrx are the actual coordinates of the field to be processed
+                    mtrx_y, mtrx_x = tmp_y + mod_y, tmp_x + mod_x
+                    if (0 <= mtrx_y <= 9 and 0 <= mtrx_x <= 9) and matrix[mtrx_y][mtrx_x] != 0:
+                        if mod_y == 0 or mod_x == 0:
+                            matrix[mtrx_y][mtrx_x] += 20
+                        else:
+                            matrix[mtrx_y][mtrx_x] = 0
 
         else:
-            self.__statistic_matrix[tmp_y][tmp_x] = 0
+            # If no ship is on that field, the probability of it to obtain a hidden ship is zero
+            matrix[tmp_y][tmp_x] = 0
 
-            if (tmp_y-4) >= 0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y-2)][(tmp_x)] -= 10
-                self.__statistic_matrix[(tmp_y-3)][(tmp_x)] -= 4
-                self.__statistic_matrix[(tmp_y-4)][(tmp_x)] -= 1
+            # If no ship is found on the selected cell, the method subtracts points
+            # from cells in the vertical and horizontal lines, that pass through the selected cell.
+            # The number of points subtracted is determined by the number of reduced opportunities.
+            for mod_y in range(-4, 5):
+                for mod_x in range(-4, 5): #These if-statements allow to query the required fields
+                    if mod_y == 0 and mod_x == 0:
+                        continue
+                    if mod_y != 0 and mod_x != 0:
+                        continue
 
-                if (tmp_y+4) <= 9:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                    self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-                    self.__statistic_matrix[(tmp_y+3)][(tmp_x)] -= 4
-                    self.__statistic_matrix[(tmp_y+4)][(tmp_x)] -= 1
+                    # mtrx are the actual coordinates of the field to be processed
+                    mtrx_y, mtrx_x = tmp_y + mod_y, tmp_x + mod_x
+                    if (0 <= mtrx_y <= 9 and 0 <= mtrx_x <= 9) and matrix[mtrx_y][mtrx_x] != 0:
+                        dstnc = abs(mod_y+mod_x) # Determine the distance
+                        match dstnc: # Function explained in docu
+                            case 1:
+                                matrix[mtrx_y][mtrx_x] -= 20
+                            case 2:
+                                matrix[mtrx_y][mtrx_x] -= 10
+                            case 3:
+                                matrix[mtrx_y][mtrx_x] -= 4
+                            case 4:
+                                matrix[mtrx_y][mtrx_x] -= 1
 
-                elif (tmp_y+3) <= 9:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                    self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-                    self.__statistic_matrix[(tmp_y+3)][(tmp_x)] -= 4
-
-                elif (tmp_y+2) <= 9:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                    self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-
-                elif (tmp_y+1) <= 9:
-                    self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-
-            elif (tmp_y-3) >= 0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y-2)][(tmp_x)] -= 10
-                self.__statistic_matrix[(tmp_y-3)][(tmp_x)] -= 4
-
-                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-                self.__statistic_matrix[(tmp_y+3)][(tmp_x)] -= 4
-                self.__statistic_matrix[(tmp_y+4)][(tmp_x)] -= 1
-
-            elif (tmp_y-2) >= 0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y-2)][(tmp_x)] -= 10
-
-                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-                self.__statistic_matrix[(tmp_y+3)][(tmp_x)] -= 4
-                self.__statistic_matrix[(tmp_y+4)][(tmp_x)] -= 1
-
-            elif (tmp_y-1) >= 0:
-                self.__statistic_matrix[(tmp_y-1)][(tmp_x)] -= 20
-
-                self.__statistic_matrix[(tmp_y+1)][(tmp_x)] -= 20
-                self.__statistic_matrix[(tmp_y+2)][(tmp_x)] -= 10
-                self.__statistic_matrix[(tmp_y+3)][(tmp_x)] -= 4
-                self.__statistic_matrix[(tmp_y+4)][(tmp_x)] -= 1
-
-
-            if (tmp_x-4) >= 0:
-                self.__statistic_matrix[(tmp_y)][(tmp_x-1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x-2)] -= 10
-                self.__statistic_matrix[(tmp_y)][(tmp_x-3)] -= 4
-                self.__statistic_matrix[(tmp_y)][(tmp_x-4)] -= 1
-
-                if (tmp_x+4) <= 9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+3)] -= 4
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+4)] -= 1
-
-                elif (tmp_x+3) <= 9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+3)] -= 4
-
-                elif (tmp_x+2) <= 9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-
-                elif (tmp_x+1) <= 9:
-                    self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-
-
-            elif (tmp_x-3) >= 0:
-                self.__statistic_matrix[(tmp_y)][(tmp_x-1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x-2)] -= 10
-                self.__statistic_matrix[(tmp_y)][(tmp_x-3)] -= 4
-
-                self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-                self.__statistic_matrix[(tmp_y)][(tmp_x+3)] -= 4
-                self.__statistic_matrix[(tmp_y)][(tmp_x+4)] -= 1
-
-            elif (tmp_x-2) >= 0:
-                self.__statistic_matrix[(tmp_y)][(tmp_x-1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x-2)] -= 10
-
-                self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-                self.__statistic_matrix[(tmp_y)][(tmp_x+3)] -= 4
-                self.__statistic_matrix[(tmp_y)][(tmp_x+4)] -= 1
-
-            elif (tmp_x-1) >= 0:
-                self.__statistic_matrix[(tmp_y)][(tmp_x-1)] -= 20
-
-                self.__statistic_matrix[(tmp_y)][(tmp_x+1)] -= 20
-                self.__statistic_matrix[(tmp_y)][(tmp_x+2)] -= 10
-                self.__statistic_matrix[(tmp_y)][(tmp_x+3)] -= 4
-                self.__statistic_matrix[(tmp_y)][(tmp_x+4)] -= 1
-
+        # Returns the choosen coordinates
         return [chr(tmp_x+97),tmp_y+1]
