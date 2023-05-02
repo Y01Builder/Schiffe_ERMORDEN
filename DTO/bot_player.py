@@ -60,7 +60,8 @@ class BotPlayer(Player):
     def __init__(self, name, playerid, difficulty=1):
         super().__init__(name, playerid)
         self.is_bot = True
-        self.difficulty = difficulty
+        self.difficulty = difficulty        
+        self._ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
         self.__statistic_matrix = [
         [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
         [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
@@ -128,7 +129,12 @@ class BotPlayer(Player):
         while repeat:
             coordinate = self.__shoot_cords(opponent)
             if opponent.map.hit_field(coordinate):
+                # when the hit was successful: stop the loop, end your turn and set turn of next player
                 repeat = False
+                self.turn = False
+                opponent.turn = True
+                
+                # return end of game, when the last ship tile of the opponent has been sunk.
                 if opponent.map.ship_tiles == 0:
                     return True
         return False
