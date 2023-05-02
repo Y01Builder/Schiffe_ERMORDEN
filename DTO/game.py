@@ -18,6 +18,8 @@ class Game:
 
     def start_game(self):
         """starts the game and check if old game exists (then load the old game)"""
+        self.clear()
+
         try:
             print("Spiel Beginn!")
             print("")
@@ -45,10 +47,6 @@ class Game:
                 # clear the screen
                 self.clear()
 
-                # check before going to the (next) player, as to stop the opponent from seeing your map
-                input("Spieler bereit?")
-                print("")
-
                 # check if it is player 1's turn
                 if self.player1.turn and not self.player2.turn:
 
@@ -67,6 +65,11 @@ class Game:
                     # player 1 will start, if no save file can be found
                     self.player1.turn = True
                     self.player2.turn = False
+
+                # check before going to the (next) player, as to stop the opponent from seeing your map
+                self.clear()
+                input("Spieler bereit?")
+                print("")
 
             # return to main, once the game has ended
             return
@@ -97,6 +100,7 @@ class Game:
 
     def __set_ships(self, player):
         # call the place_ships function on the new player
+        self.clear()
         print(f"{player.name}! Setze deine Schiffe!")
         return player.place_ships()
 
@@ -145,10 +149,21 @@ class Game:
     def end_game(self, winner):
         """ends the game with a print and deleting game files"""
         try:
+            # print "Winner!" ASCII art
+            self.clear()
+            print(" __          ___                       _ ")
+            print(" \ \        / (_)                     | |")
+            print("  \ \  /\  / / _ _ __  _ __   ___ _ __| |")
+            print("   \ \/  \/ / | | '_ \| '_ \ / _ \ '__| |")
+            print("    \  /\  /  | | | | | | | |  __/ |  |_|")
+            print("     \/  \/   |_|_| |_|_| |_|\___|_|  (_)")
+            print("")
+
             # print the winner and delete current save files
             print(f'{winner.name} Hat alle Schiffe seines Gegners ERMORDET!')
             os.remove(rf"{self.path}\mapPlayer1.pickle")
             os.remove(rf"{self.path}\mapPlayer2.pickle")
+            input("Drücke Enter um fortzufahren...")
         except FileNotFoundError:
             print(f"Beim löschen der Datei ist ein Fehler aufgetreten {self.path}!")
 
@@ -157,12 +172,12 @@ class Game:
         try:
             # check for OS and set the according "clear screen" command
             if sys.platform == "win32":
-                clear = "cls"
+                clearcommand = "cls"
             else:
-                clear = "clear"
+                clearcommand = "clear"
 
             # execute the "clear screen" command
-            os.system(clear)
+            os.system(clearcommand)
         except NameError:
             print("Ein Problem beim importieren der Bibliotheken ist aufgetreten!")
 
