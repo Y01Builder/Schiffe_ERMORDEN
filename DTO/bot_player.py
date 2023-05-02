@@ -169,7 +169,7 @@ class BotPlayer(Player):
                     target = self.__statistical_analysis(opponent)
                     return target
                 case 2:
-                    for trgt_y, row in enumerate(opponent.map):
+                    for trgt_y, row in enumerate(opponent.map.fields):
                         for trgt_x, field in enumerate(row):
                             if field.get_ship_on_field() and not field.get_field_hit():
                                 valid_hit = True
