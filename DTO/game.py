@@ -257,6 +257,8 @@ class Game:
             print(f"Die Datei mapPlayer{player.playerid + 1}.pickle war nicht vorhanden!")
         except MemoryError:
             print(f"Die Datei mapPlayer{player.playerid + 1}.pickle ist beschädigt und konnte nicht geladen werden!")
+        except pickle.UnpicklingError:
+            print(f"Die Datei mapPlayer{player.playerid + 1}.pickle war defekt!")
         return False
 
     def end_game(self, winner):
