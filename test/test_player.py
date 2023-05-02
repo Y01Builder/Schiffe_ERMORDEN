@@ -16,19 +16,19 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.playerid, 1)
 
     def testvalidate_coordinate(self):
-        #Alle Ecken des Spielfelds pruefen und verschiedene Werte
+        #check coordinates for validation
         self.assertEqual(self.player.validate_coordinate("A1"), ("A", "1"))
         self.assertEqual(self.player.validate_coordinate("B2"), ("B", "2"))
         self.assertEqual(self.player.validate_coordinate("J10"), ("J", "10"))
         self.assertEqual(self.player.validate_coordinate("A10"), ("A", "10"))
         self.assertEqual(self.player.validate_coordinate("J1"), ("J", "1"))
-        #Ausserhalb des Spielfelds pruefen
+        #check coordinates out of playground
         self.assertFalse(self.player.validate_coordinate("C11"))
         self.assertFalse(self.player.validate_coordinate("Z10"))
         self.assertFalse(self.player.validate_coordinate("Test"))
 
     def test_validate_orientation(self):
-        #Richtungen pruefen (aktuelle ohne Kleinbuchstaben)
+        #check orientations
         self.assertEqual(self.player._validate_orientation("N"), "N")
         self.assertEqual(self.player._validate_orientation("S"), "S")
         self.assertEqual(self.player._validate_orientation("O"), "O")
@@ -50,9 +50,9 @@ class TestPlayer(unittest.TestCase):
                                           "A8", "O", "J7", "W", "F2", "O"])
     def test_place_ships(self, mock):
         self.player.place_ships()
-        #Pruefen ob Schiff auf Feld gesetzt
+        #check ship is set on field
         self.assertTrue(self.player.map.fields[0][0].shiponfield)
-        # Fieldhit muss nach setzen auf 0 bleiben
+        # fieldhit must be 0
         self.assertFalse(self.player.map.fields[0][0].fieldhit)
-        #ShipTiles ist fest auf 30 im Code gesetzt
+        #check ship_tiles after set
         self.assertEqual(self.player.map.ship_tiles, 30)
