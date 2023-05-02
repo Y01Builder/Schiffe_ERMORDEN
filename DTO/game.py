@@ -89,6 +89,7 @@ class Game:
             return
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
+            sys.exit(0)
 
     def __startscreen(self):
         self.__print_kill_ship()
