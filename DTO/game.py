@@ -272,8 +272,15 @@ class Game:
 
             # print the winner and delete current save files
             print(f'{winner.name} Hat alle Schiffe seines Gegners ERMORDET!')
-            os.remove(rf"{self.path}\mapPlayer1.pickle")
-            os.remove(rf"{self.path}\mapPlayer2.pickle")
+
+            # check for OS and use the according path seperator
+            if sys.platform == "win32":
+                os.remove(rf"{self.path}\mapPlayer1.pickle")
+                os.remove(rf"{self.path}\mapPlayer2.pickle")
+            else:
+                os.remove(rf"{self.path}/mapPlayer1.pickle")
+                os.remove(rf"{self.path}/mapPlayer2.pickle")
+
             input("Drücke Enter um fortzufahren...")
         except FileNotFoundError:
             print(f"Beim löschen der Datei ist ein Fehler aufgetreten {self.path}!")
