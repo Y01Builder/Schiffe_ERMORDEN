@@ -3,6 +3,7 @@ import os
 import pickle
 import sys
 from DTO.player import Player
+from DTO.bot_player import BotPlayer
 
 
 class Game:
@@ -18,28 +19,37 @@ class Game:
 
     def start_game(self):
         """starts the game and check if old game exists (then load the old game)"""
+
         self.clear()
 
         try:
             print("Spiel Beginn!")
             print("")
 
+            # TODO: Checken wie wir den Bot Speichern...
             # if save files exist: try to load them.
+
             if os.path.exists(rf"{self.path}\mapPlayer{self.player1.playerid + 1}.pickle") and os.path.exists(
-                    rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
+            rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
+
                 self.player1 = self.__load_game(self.player1)
-                self.player2 = self.__load_game(self.player2)
+                self.player2 = self.__load_game(self.player2, bot)
 
                 if not self.player1 or not self.player2:
+
+                    bot = self.__startscreen()
+
                     # create new players, when the save file can not be loaded
-                    print("Ein Fehler ist beim Laden aufgetreten! Erstelle neue Spieler.")
+                    print("Vorhin ist ein Fehler beim Laden aufgetreten! Erstelle neue Spieler.")
                     self.player1 = self.__create_player(0)
-                    self.player2 = self.__create_player(1)
+                    self.player2 = self.__create_player(1, bot)
             else:
+
+                bot = self.__startscreen()
 
                 # create new players, when there is no save file
                 self.player1 = self.__create_player(0)
-                self.player2 = self.__create_player(1)
+                self.player2 = self.__create_player(1, bot)
 
             # loop attacks while no player has won
             while True:
@@ -76,19 +86,110 @@ class Game:
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
 
-    def __create_player(self, playerid):
+    def __startscreen(self):
+
+        self.clear()
+
+        print("")
+        print("Willkommen! Zu...")
+        print("")
+        print("")
+        print("   _____      _     _  __  __           ______ _____  __  __  ____  _____  ______ _   _   _ ")
+        print("  / ____|    | |   (_)/ _|/ _|         |  ____|  __ \|  \/  |/ __ \|  __ \|  ____| \ | | | |")
+        print(" | (___   ___| |__  _| |_| |_ ___      | |__  | |__) | \  / | |  | | |  | | |__  |  \| | | |")
+        print("  \___ \ / __| '_ \| |  _|  _/ _ \     |  __| |  _  /| |\/| | |  | | |  | |  __| | . ` | | |")
+        print("  ____) | (__| | | | | | | ||  __/     | |____| | \ \| |  | | |__| | |__| | |____| |\  | |_|")
+        print(" |_____/ \___|_| |_|_|_| |_| \___|     |______|_|  \_\_|  |_|\____/|_____/|______|_| \_| (_)")
+        print("")
+
+        repeat = True
+        while repeat:
+            print("Welche Option soll es sein? (1 oder 2)")
+            print("1. 1 Spieler: Player vs. Computer")
+            print("2. 2 Spieler: Player vs. Player")
+            mode = input("")
+            print("")
+
+            match mode:
+                case 1:
+                    init_bot = True
+                    repeat = False
+                case 2:
+                    init_bot = False
+                    repeat = False
+                case _:
+                    print("Fehler bei der Eingabe!")
+                    repeat = True
+
+        if init_bot:
+            repeat = True
+            while repeat:
+                print("Welche Schwierigkeitsstufe soll es sein?")
+                print("1. Rekrut  (Einfach)")
+                print("2. Marine  (Medium)")
+                print("3. Veteran (Schwer)")
+                difficulty = input("")
+                print("")
+
+                match difficulty:
+                    case 1:
+                        repeat = False
+                    case 2:
+                        repeat = False
+                    case 3:
+                        repeat = False
+                    case _:
+                        print("Fehler bei der Eingabe!")
+                        print("")
+                        repeat = True
+
+        repeat = True
+        while repeat:
+            rules = input("Möchten sie die Regeln erneut sehen? (J/N)\n")
+            match rules:
+                case "J":
+                    self.clear()
+                    print("Regeln für Schiffe ermorden:")
+                    print("")
+                    print("1. Jeder Spieler hat 1 Schlachtschiff (5 Felder), 2 Kreuzer (4 Felder), 3 Zerstörer ",
+                          "(3 Felder) und 4 U-Boote (2 Felder)")
+                    print("2. deine Schiffe dürfen sich nicht berühren")
+                    print("3. Die Spieler schießen nacheinander auf die Karte des Gegners")
+                    print("4. Der Spieler, der zuerst alle gegnerischen Schiffe komplett ermordet hat, hat gewonnen.")
+                    print("")
+                    input("Zum Fortfahren Enter druecken...")
+                    repeat = False
+                case "N":
+                    repeat = False
+                case _:
+                    print("Fehler bei der Eingabe!")
+                    print("")
+                    repeat = True
+        self.clear()
+        return init_bot, difficulty
+
+    def __create_player(self, playerid, bot=None):
         """creates the player object and set the ships"""
+        if bot is None:
+            bot = [False, 1]
         try:
             print("")
 
-            # get Name of player and create the object
-            name_player = input(f"Bitte benennen Sie Spieler {playerid + 1}!\n")
-            player = Player(name_player, playerid)
-            print("")
+            if not bot[0]:
+                # get Name of player and create the object if the mode chosen is PvP
+                name_player = input(f"Bitte benennen Sie Spieler {playerid + 1}!\n")
+                player = Player(name_player, playerid)
+                print("")
 
-            # let the player place his ships
-            self.__set_ships(player)
+                # let the player place his ships
+                self.__set_ships(player)
+            else:
+                # create a Bot, if the mode chosen is PvC
+                name_player = "Jack Sparrow"
+                player = BotPlayer(name_player, playerid, difficulty=bot[1])
 
+                # let the bot place its ships
+                player.place_ships()
             # clear the screen
             self.clear()
 
@@ -133,13 +234,19 @@ class Game:
         except pickle.PickleError:
             print("Es ist ein Fehler in der Pickle Komponente aufgetreten!")
 
-    def __load_game(self, player):
+    def __load_game(self, player, bot=None):
+        if bot is None:
+            bot = [False, 1]
         try:
             # load the player object from the mapPlayerX.pickle file
             with open(f"mapPlayer{player.playerid + 1}.pickle", "rb") as file:
                 player = pickle.load(file)
             # return the player object
-            return player
+            if bot[0]:
+                print("")
+
+            else:
+                return player
         except PermissionError:
             print("Sie haben keine Berechtigung auf die Datei oder Ordner zuzugreifen!")
         except FileNotFoundError:

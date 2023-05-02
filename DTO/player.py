@@ -17,6 +17,7 @@ class Player:
         self.map = Map(playerid)
         # bool to save whose turn it is after loading a savefile.
         self.turn = False
+        self.is_bot = False
 
     def print_map(self, show_ships):
         """prints the user map. If show_ships == True, all ships will be shown"""
