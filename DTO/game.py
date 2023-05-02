@@ -80,6 +80,8 @@ class Game:
                 # check before going to the next player (except bot), as to stop the opponent from seeing your map
                 self.clear()
                 if not self.player1.turn and self.player2.turn and self.player2.is_bot:
+                    pass
+                else:
                     input("Spieler bereit?")
                     print("")
 
