@@ -1,6 +1,6 @@
 """import randint, Player and Map"""
 from random import randint
-from player import Player
+from DTO.player import Player
 #from map import Map
 
 class BotPlayer(Player):
