@@ -6,8 +6,8 @@ from DTO.map import Map
 class Player:
     """the player class contains all actions from the player like shoot,place ships and print map"""
     # create array of all ships that a player has to have: [name, length, number]
-    #_ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-    _ships = [["Schlachtschiff", 5, 1]]
+    _ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
+    #_ships = [["Schlachtschiff", 5, 1]]
 
     def __init__(self, name, playerid):
         # set name and ID of player
@@ -153,7 +153,7 @@ class Player:
                 return matches.groups()
 
             # if no match has been found, the validation  will return a failure.
-            print("Die Eingabe der Koordinaten war nicht korrekt!")
+            print(f"Die Eingabe der Koordinaten war nicht korrekt! Koordinate: {coordinate}")
             return False
         except TypeError:
             print("Bei der Validierung der Koordinaten ist ein Typen Fehler aufgetreten! Bitte prüfen Sie die Werte!")

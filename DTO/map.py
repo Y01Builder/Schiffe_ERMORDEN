@@ -66,7 +66,7 @@ class Map:
 
             # check if field has already been hit and report failure
             if actual_field.fieldhit:
-                print("Dieses Feld wurde bereits getroffen!")
+                print(f"Dieses Feld wurde bereits getroffen! Koordinate: {coordinate}")
                 return False
 
             # check if field has ship on it
