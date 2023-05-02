@@ -154,7 +154,7 @@ class BotPlayer(Player):
                 case 0:
                     trgt_x = randint(0, 9)
                     trgt_y = randint(0, 9)
-                    if opponent.map.fields[trgt_y][trgt_x].get_field_hit():
+                    if not opponent.map.fields[trgt_y][trgt_x].get_field_hit():
                         valid_hit = True
                         return [chr(trgt_x+97),trgt_y+1]
                     continue
@@ -176,7 +176,7 @@ class BotPlayer(Player):
         """
         Randomly places the bot's ships on the map.
         """
-        ship_fields = [[]]
+        ship_fields = []
         for name, length, count in super()._ships:
             for i in range(0, count):
                 orientation, coordinate = self.__get_placement(length, ship_fields)
