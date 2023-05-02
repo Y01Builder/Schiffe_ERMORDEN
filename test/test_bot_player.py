@@ -65,15 +65,6 @@ class TestBotPlayer(unittest.TestCase):
         [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
         [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]])
 
-
-    @patch.object(BotPlayer, 'place_ships')
-    def test_place_ships(self, mock_place_ships):
-        bot_player = BotPlayer('Bot', 2, difficulty=1)
-        bot_player._Player_ships = [["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
-        bot_player.place_ships()
-        mock_place_ships.assert_called_once()
-
-
     
     def test_place_ships(self):
         with patch.object(BotPlayer, '_BotPlayer__get_placement', side_effect=[('O', ['e', 10]),#5
@@ -184,6 +175,4 @@ class TestBotPlayer(unittest.TestCase):
         del self.opponent
         del self.bot
 
-if __name__ == '__main__':
-    unittest.main()
 
