@@ -1,5 +1,7 @@
 """import Map and regex"""
 import re
+import sys
+
 from DTO.map import Map
 
 
@@ -100,6 +102,7 @@ class Player:
             return False
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
+            sys.exit(0)
             return False
 
     def place_ships(self):
@@ -138,6 +141,7 @@ class Player:
             return True
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
+            sys.exit(0)
         return False
 
     def validate_coordinate(self, coordinate):

@@ -27,3 +27,4 @@ if __name__ == '__main__':
         sys.exit(0)
     except KeyboardInterrupt:
         print("Sie haben das Spiel mit Ihrer Eingabe abgebrochen!")
+        sys.exit(0)

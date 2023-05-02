@@ -204,6 +204,7 @@ class Game:
             return player
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
+            sys.exit(0)
             return False
 
     def __set_ships(self, player):
