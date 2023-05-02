@@ -1,7 +1,6 @@
-"""import randint, Player and Map"""
+"""import randint and Player"""
 from random import randint
 from DTO.player import Player
-#from map import Map
 
 class BotPlayer(Player):
     """
@@ -9,7 +8,7 @@ class BotPlayer(Player):
 
     Attributes:
     -----------
-        __difficulty : int
+        difficulty : int
             The difficulty level of the bot player.
         __statistic_matrix : List[List[int]]
             The matrix representing the probability of having a ship in each position of the map
@@ -60,7 +59,8 @@ class BotPlayer(Player):
     """
     def __init__(self, name, playerid, difficulty=1):
         super().__init__(name, playerid)
-        self.__difficulty = difficulty
+        self.is_bot = True
+        self.difficulty = difficulty
         self.__statistic_matrix = [
         [20, 30, 36, 39, 40, 40, 39, 36, 30, 20],
         [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
@@ -89,7 +89,7 @@ class BotPlayer(Player):
                 True if the difficulty is set successfully, False otherwise.
         """
         if 0 <= difficulty <= 2:
-            self.__difficulty = difficulty
+            self.difficulty = difficulty
             self.reset_statistic_table()
             return True
         return False
@@ -150,7 +150,7 @@ class BotPlayer(Player):
         """
         valid_hit = False
         while not valid_hit:
-            match self.__difficulty:
+            match self.difficulty:
                 case 0:
                     trgt_x = randint(0, 9)
                     trgt_y = randint(0, 9)
@@ -177,7 +177,7 @@ class BotPlayer(Player):
         Randomly places the bot's ships on the map.
         """
         ship_fields = []
-        for name, length, count in super()._ships:
+        for name, length, count in self._ships:
             for i in range(0, count):
                 orientation, coordinate = self.__get_placement(length, ship_fields)
                 if not self.map.place_ships(coordinate, orientation, length):   # FOR DEBUG
