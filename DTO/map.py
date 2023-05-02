@@ -1,3 +1,4 @@
+#pylint: disable=E0401
 """import the field class"""
 from DTO.field import Field
 

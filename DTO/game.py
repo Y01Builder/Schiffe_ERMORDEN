@@ -1,3 +1,4 @@
+#pylint: disable=E0401
 """import modules"""
 import os
 import pickle

@@ -1,3 +1,4 @@
+#pylint: disable=E0401
 """import Map and regex"""
 import re
 import sys

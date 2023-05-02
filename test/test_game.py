@@ -87,7 +87,7 @@ class TestGame(unittest.TestCase):
             self.game.start_game()
 
     def test_start_game_with_corruptfile(self): # save the player object into the mapPlayerX.pickle file
-        with open(f"mapPlayer1.pickle", "w") as file:
+        with open("mapPlayer1.pickle", "w", encoding="utf-8") as file:
             file.write("test")
         player = Player('Mario', 0)
         player.map.fields[0][0].shiponfield = True
