@@ -15,7 +15,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.name, "Mario")
         self.assertEqual(self.player.playerid, 1)
 
-    def testvalidate_coordinate(self):
+    def test_validate_coordinate(self):
         #check coordinates for validation
         self.assertEqual(self.player.validate_coordinate("A1"), ("A", "1"))
         self.assertEqual(self.player.validate_coordinate("B2"), ("B", "2"))
@@ -46,10 +46,10 @@ class TestPlayer(unittest.TestCase):
         self.assertTrue(self.opponent.map.fields[0][0].fieldhit)
         self.assertEqual(self.opponent.map.ship_tiles, 0)
 
-    @patch("builtins.input", side_effect=["A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1", "S", "J10", "N",
-                                          "A8", "O", "J7", "W", "F2", "O"])
-    def test_place_ships(self, mock):
-        self.player.place_ships()
+    def test_place_ships(self):
+        with patch('builtins.input', side_effect=["A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1", "S", "J10", "N",
+                                          "A8", "O", "J7", "W", "F2", "O"]):
+            self.player.place_ships()
         #check ship is set on field
         self.assertTrue(self.player.map.fields[0][0].shiponfield)
         # fieldhit must be 0

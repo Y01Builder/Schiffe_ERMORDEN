@@ -40,23 +40,23 @@ class Player:
                     if self.map.fields[columns][row].shiponfield:
                         if self.map.fields[columns][row].fieldhit:
                             # add Ø when there is a ship and it is hit
-                            printable.append(f"\tØ")
+                            printable.append("\tØ")
 
                         elif show_ships:
                             # add O when there is a ship and user has permission to see it
-                            printable.append(f"\tO")
+                            printable.append("\tO")
 
                         else:
                             # add ~ when there is a ship that has not been hit and the user has no permission to see it
-                            printable.append(f"\t~")
+                            printable.append("\t~")
 
                     elif self.map.fields[columns][row].fieldhit:
                         # add X when there is no ship and the field is hit
-                        printable.append(f"\tX")
+                        printable.append("\tX")
 
                     else:
                         # add ~ in all other cases
-                        printable.append(f"\t~")
+                        printable.append("\t~")
 
                 # print the array of the current row and move to the next one
                 print(
@@ -103,7 +103,6 @@ class Player:
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
             sys.exit(0)
-            return False
 
     def place_ships(self):
         """iterate all ships to set their orientation and coordinates"""

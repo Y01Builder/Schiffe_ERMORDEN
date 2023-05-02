@@ -26,9 +26,7 @@ class Game:
             print("Spiel Beginn!")
             print("")
 
-            # TODO: Checken wie wir den Bot Speichern...
             # if save files exist: try to load them.
-
             if os.path.exists(rf"{self.path}\mapPlayer{self.player1.playerid + 1}.pickle") and os.path.exists(
             rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
 
@@ -90,21 +88,7 @@ class Game:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
 
     def __startscreen(self):
-
-        self.clear()
-
-        print("")
-        print("Willkommen! Zu...")
-        print("")
-        print("")
-        print("   _____      _     _  __  __           ______ _____  __  __  ____  _____  ______ _   _   _ ")
-        print("  / ____|    | |   (_)/ _|/ _|         |  ____|  __ \|  \/  |/ __ \|  __ \|  ____| \ | | | |")
-        print(" | (___   ___| |__  _| |_| |_ ___      | |__  | |__) | \  / | |  | | |  | | |__  |  \| | | |")
-        print("  \___ \ / __| '_ \| |  _|  _/ _ \     |  __| |  _  /| |\/| | |  | | |  | |  __| | . ` | | |")
-        print("  ____) | (__| | | | | | | ||  __/     | |____| | \ \| |  | | |__| | |__| | |____| |\  | |_|")
-        print(" |_____/ \___|_| |_|_|_| |_| \___|     |______|_|  \_\_|  |_|\____/|_____/|______|_| \_| (_)")
-        print("")
-
+        self.__print_kill_ship()
         repeat = True
         while repeat:
             print("Welche Option soll es sein? (1 oder 2)")
@@ -156,14 +140,7 @@ class Game:
             match rules:
                 case "J":
                     self.clear()
-                    print("Regeln für Schiffe ermorden:")
-                    print("")
-                    print("1. Jeder Spieler hat 1 Schlachtschiff (5 Felder), 2 Kreuzer (4 Felder), 3 Zerstörer ",
-                          "(3 Felder) und 4 U-Boote (2 Felder)")
-                    print("2. deine Schiffe dürfen sich nicht berühren")
-                    print("3. Die Spieler schießen nacheinander auf die Karte des Gegners")
-                    print("4. Der Spieler, der zuerst alle gegnerischen Schiffe komplett ermordet hat, hat gewonnen.")
-                    print("")
+                    self.__print_kill_ship_rules()
                     input("Zum Fortfahren Enter druecken...")
                     repeat = False
                 case "N":
@@ -174,6 +151,31 @@ class Game:
                     repeat = True
         self.clear()
         return init_bot, difficulty
+
+    def __print_kill_ship_rules(self):
+        print("Regeln für Schiffe ermorden:")
+        print("")
+        print("1. Jeder Spieler hat 1 Schlachtschiff (5 Felder), 2 Kreuzer (4 Felder), 3 Zerstörer ",
+              "(3 Felder) und 4 U-Boote (2 Felder)")
+        print("2. deine Schiffe dürfen sich nicht berühren")
+        print("3. Die Spieler schießen nacheinander auf die Karte des Gegners")
+        print("4. Der Spieler, der zuerst alle gegnerischen Schiffe komplett ermordet hat, hat gewonnen.")
+        print("")
+
+    def __print_kill_ship(self):
+        self.clear()
+
+        print("")
+        print("Willkommen! Zu...")
+        print("")
+        print("")
+        print("   _____      _     _  __  __           ______ _____  __  __  ____  _____  ______ _   _   _ ")
+        print("  / ____|    | |   (_)/ _|/ _|         |  ____|  __ \|  \/  |/ __ \|  __ \|  ____| \ | | | |")# pylint: disable=anomalous-backslash-in-string
+        print(" | (___   ___| |__  _| |_| |_ ___      | |__  | |__) | \  / | |  | | |  | | |__  |  \| | | |")# pylint: disable=anomalous-backslash-in-string
+        print("  \___ \ / __| '_ \| |  _|  _/ _ \     |  __| |  _  /| |\/| | |  | | |  | |  __| | . ` | | |")# pylint: disable=anomalous-backslash-in-string
+        print("  ____) | (__| | | | | | | ||  __/     | |____| | \ \| |  | | |__| | |__| | |____| |\  | |_|")# pylint: disable=anomalous-backslash-in-string
+        print(" |_____/ \___|_| |_|_|_| |_| \___|     |______|_|  \_\_|  |_|\____/|_____/|______|_| \_| (_)")# pylint: disable=anomalous-backslash-in-string
+        print("")
 
     def __create_player(self, playerid, bot=None):
         """creates the player object and set the ships"""
@@ -205,7 +207,6 @@ class Game:
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
             sys.exit(0)
-            return False
 
     def __set_ships(self, player):
         # call the place_ships function on the new player
@@ -264,11 +265,11 @@ class Game:
             # print "Winner!" ASCII art
             self.clear()
             print(" __          ___                       _ ")
-            print(" \ \        / (_)                     | |")
-            print("  \ \  /\  / / _ _ __  _ __   ___ _ __| |")
-            print("   \ \/  \/ / | | '_ \| '_ \ / _ \ '__| |")
-            print("    \  /\  /  | | | | | | | |  __/ |  |_|")
-            print("     \/  \/   |_|_| |_|_| |_|\___|_|  (_)")
+            print(" \ \        / (_)                     | |")# pylint: disable=anomalous-backslash-in-string
+            print("  \ \  /\  / / _ _ __  _ __   ___ _ __| |")# pylint: disable=anomalous-backslash-in-string
+            print("   \ \/  \/ / | | '_ \| '_ \ / _ \ '__| |")# pylint: disable=anomalous-backslash-in-string
+            print("    \  /\  /  | | | | | | | |  __/ |  |_|")# pylint: disable=anomalous-backslash-in-string
+            print("     \/  \/   |_|_| |_|_| |_|\___|_|  (_)")# pylint: disable=anomalous-backslash-in-string
             print("")
 
             # print the winner and delete current save files

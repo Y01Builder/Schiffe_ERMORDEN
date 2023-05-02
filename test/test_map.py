@@ -1,4 +1,5 @@
 #pylint: disable=C
+#pylint: disable=W0212
 import unittest
 from DTO.map import Map
 
