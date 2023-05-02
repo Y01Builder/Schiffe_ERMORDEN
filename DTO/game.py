@@ -33,7 +33,9 @@ class Game:
             rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
 
                 self.player1 = self.__load_game(self.player1)
-                self.player2 = self.__load_game(self.player2, bot)
+                self.player2 = self.__load_game(self.player2)
+                if self.player2.is_bot:
+                    bot = [True]
 
                 if not self.player1 or not self.player2:
 
@@ -76,10 +78,11 @@ class Game:
                     self.player1.turn = True
                     self.player2.turn = False
 
-                # check before going to the (next) player, as to stop the opponent from seeing your map
+                # check before going to the next player (except bot), as to stop the opponent from seeing your map
                 self.clear()
-                input("Spieler bereit?")
-                print("")
+                if not self.player1.turn and self.player2.turn and self.player2.is_bot:
+                    input("Spieler bereit?")
+                    print("")
 
             # return to main, once the game has ended
             return
@@ -211,11 +214,12 @@ class Game:
 
     def __player_turn(self, player, opponent):
         # prints ASCII art of the player
-        self.__print_player(player.playerid)
+        if not player.is_bot:
+            self.__print_player(player.playerid)
 
-        # show maps of opponent (top) and player (bottom)
-        opponent.print_map(show_ships=False)
-        player.print_map(show_ships=True)
+            # show maps of opponent (top) and player (bottom)
+            opponent.print_map(show_ships=False)
+            player.print_map(show_ships=True)
 
         # the loop will break, if the shoot_field method returns end of game
         if player.shoot_field(opponent):
@@ -238,19 +242,13 @@ class Game:
         except pickle.PickleError:
             print("Es ist ein Fehler in der Pickle Komponente aufgetreten!")
 
-    def __load_game(self, player, bot=None):
-        if bot is None:
-            bot = [False, 1]
+    def __load_game(self, player):
         try:
             # load the player object from the mapPlayerX.pickle file
             with open(f"mapPlayer{player.playerid + 1}.pickle", "rb") as file:
                 player = pickle.load(file)
             # return the player object
-            if bot[0]:
-                print("")
-
-            else:
-                return player
+            return player
         except PermissionError:
             print("Sie haben keine Berechtigung auf die Datei oder Ordner zuzugreifen!")
         except FileNotFoundError:
