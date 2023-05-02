@@ -213,28 +213,28 @@ class BotPlayer(Player):
 
             match orientation:
                 case 0: # north
-                    ori = ['N']
+                    ori = 'N'
                     strt_y = randint(length-1, 9)
                     strt_x = randint(0, 9)
                     end_y = strt_y-(length-1)
                     end_x = strt_x
 
                 case 1: # east
-                    ori = ['O']
+                    ori = 'O'
                     strt_y = randint(0, 9)
                     strt_x = randint(0, 10-length)
                     end_y = strt_y
                     end_x = strt_x+(length-1)
 
                 case 2: # south
-                    ori = ['S']
+                    ori = 'S'
                     strt_y = randint(0, 10-length)
                     strt_x = randint(0, 9)
                     end_y = strt_y+(length-1)
                     end_x = strt_x
 
                 case 3: # west
-                    ori = ['W']
+                    ori = 'W'
                     strt_y = randint(0, 9)
                     strt_x = randint(length-1, 9)
                     end_y = strt_y
