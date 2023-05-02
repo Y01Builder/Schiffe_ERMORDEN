@@ -55,6 +55,28 @@ class TestGame(unittest.TestCase):
         self.assertEqual(player.name, loaded_player.name)
         self.assertEqual(player.playerid, loaded_player.playerid)
 
+    def test_startscreen(self):
+        with patch('builtins.input', side_effect=['4','1','4','1','4','J','\n']):
+            init_bot,difficulty=self.game._Game__startscreen()
+        self.assertEqual(init_bot,True)
+        self.assertEqual(difficulty,0)
+        with patch('builtins.input', side_effect=['1','1','N']):
+            init_bot,difficulty=self.game._Game__startscreen()
+        self.assertEqual(init_bot,True)
+        self.assertEqual(difficulty,0)
+        with patch('builtins.input', side_effect=['1','2','J','\n']):
+            init_bot,difficulty=self.game._Game__startscreen()
+        self.assertEqual(init_bot,True)
+        self.assertEqual(difficulty,1)
+        with patch('builtins.input', side_effect=['1','3','J','\n']):
+            init_bot,difficulty=self.game._Game__startscreen()
+        self.assertEqual(init_bot,True)
+        self.assertEqual(difficulty,2)
+        with patch('builtins.input', side_effect=['2','J','\n']):
+            init_bot,difficulty=self.game._Game__startscreen()
+        self.assertEqual(init_bot,False)
+        self.assertEqual(difficulty,1)
+
     def test_load_game(self):
         player = Player('Mario', 0)
         with open('mapPlayer1.pickle', 'wb') as file:
