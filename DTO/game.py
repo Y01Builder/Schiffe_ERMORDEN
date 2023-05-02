@@ -111,11 +111,12 @@ class Game:
             print("")
 
             match mode:
-                case 1:
+                case "1":
                     init_bot = True
                     repeat = False
-                case 2:
+                case "2":
                     init_bot = False
+                    difficulty = 1
                     repeat = False
                 case _:
                     print("Fehler bei der Eingabe!")
@@ -132,12 +133,15 @@ class Game:
                 print("")
 
                 match difficulty:
-                    case 1:
+                    case "1":
                         repeat = False
-                    case 2:
+                        difficulty = 0
+                    case "2":
                         repeat = False
-                    case 3:
+                        difficulty = 1
+                    case "3":
                         repeat = False
+                        difficulty = 2
                     case _:
                         print("Fehler bei der Eingabe!")
                         print("")
