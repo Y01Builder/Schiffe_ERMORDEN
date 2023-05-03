@@ -1,4 +1,5 @@
 #pylint: disable=E0401
+#pylint is unable to import 'DTO.*' because it`s not in the same folder
 """import randint and Player"""
 from random import randint
 from DTO.player import Player
@@ -261,7 +262,7 @@ class BotPlayer(Player):
         coords = [chr(strt_x+97), str(strt_y+1)]
         return ori, coords
 
-
+    # pylint Removing any of these statements would negatively impact the bot's performance.
     #pylint: disable=too-many-branches
     def __statistical_analysis(self, opponent):
         """

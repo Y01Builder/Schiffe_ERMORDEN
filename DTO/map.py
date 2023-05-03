@@ -1,4 +1,5 @@
 #pylint: disable=E0401
+#pylint is unable to import 'DTO.*' because it`s not in the same folder
 """import the field class"""
 from DTO.field import Field
 

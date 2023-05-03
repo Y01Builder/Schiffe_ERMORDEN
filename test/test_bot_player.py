@@ -1,5 +1,6 @@
 #pylint: disable=C
 #pylint: disable=W0212
+#pylint display a warning if you use private functions from other classes - we need it to test the functions
 import unittest
 from unittest.mock import Mock, patch
 from DTO.player import Player

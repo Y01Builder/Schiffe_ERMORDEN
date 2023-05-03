@@ -1,4 +1,5 @@
 #pylint: disable=E0401
+#pylint is unable to import 'DTO.*' because it`s not in the same folder
 """import modules"""
 import os
 import pickle
@@ -175,7 +176,7 @@ class Game:
 
     def __print_kill_ship(self):
         self.clear()
-
+        #pylint display a message because the string isn`t escaped - we only want to display the text
         print("")
         print("Willkommen! Zu...")
         print("")
@@ -277,6 +278,7 @@ class Game:
         try:
             # print "Winner!" ASCII art
             self.clear()
+            #pylint display a message because the string isn`t escaped - we only want to display the text
             print(" __          ___                       _ ")
             print(" \ \        / (_)                     | |")# pylint: disable=anomalous-backslash-in-string
             print("  \ \  /\  / / _ _ __  _ __   ___ _ __| |")# pylint: disable=anomalous-backslash-in-string
@@ -317,6 +319,7 @@ class Game:
     def __print_player(self, playerid):
         if playerid == 0:
 
+            # pylint display a message because the string isn`t escaped - we only want to display the text
             # print "Spieler 1" in ASCII art
             print("  ____        _      _             _ ")
             print(" / ___| _ __ (_) ___| | ___ _ __  / |")
@@ -328,6 +331,7 @@ class Game:
 
         elif playerid == 1:
 
+            # pylint display a message because the string isn`t escaped - we only want to display the text
             # print "Spieler 2" in ASCII art
             print("  ____        _      _             ____  ")
             print(" / ___| _ __ (_) ___| | ___ _ __  |___ \ ")  # pylint: disable=anomalous-backslash-in-string
