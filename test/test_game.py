@@ -3,6 +3,7 @@
 import unittest
 import pickle
 import os
+import sys
 from unittest.mock import patch
 from DTO.player import Player
 from DTO.game import Game
@@ -11,7 +12,12 @@ from DTO.game import Game
 class TestGame(unittest.TestCase):
 
     def setUp(self):
-        self.game = Game(f"{os.path.dirname(os.path.abspath(__file__))}")
+        self.path=os.path.dirname(os.path.abspath(__file__))
+        self.game = Game(f"{self.path}")
+        if sys.platform== 'win32':
+            self.seperator='\\'
+        else:
+            self.seperator='/'
 
     def tearDown(self):
         del self.game
@@ -133,3 +139,14 @@ class TestGame(unittest.TestCase):
           "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3", "\n"
                                                   ]):
             self.game.start_game()
+
+    def test_end_game(self):
+        with open(f"{self.path}{self.seperator}mapPlayer1.pickle", "w", encoding="utf-8") as file:
+            file.write("test")
+        with open(f"{self.path}{self.seperator}mapPlayer2.pickle", "w", encoding="utf-8") as file:
+            file.write("test")
+        testPlayer = Player('Mario', 0)
+        with patch('builtins.input', side_effect=['\n']):
+            self.game.end_game(testPlayer)
+        self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer1.pickle"))
+        self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer2.pickle"))

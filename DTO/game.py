@@ -283,11 +283,11 @@ class Game:
 
             # check for OS and use the according path seperator
             if sys.platform == "win32":
-                os.remove(rf"{self.path}\mapPlayer1.pickle")
-                os.remove(rf"{self.path}\mapPlayer2.pickle")
+                os.remove(f"{self.path}\mapPlayer1.pickle")
+                os.remove(f"{self.path}\mapPlayer2.pickle")
             else:
-                os.remove(rf"{self.path}/mapPlayer1.pickle")
-                os.remove(rf"{self.path}/mapPlayer2.pickle")
+                os.remove(f"{self.path}/mapPlayer1.pickle")
+                os.remove(f"{self.path}/mapPlayer2.pickle")
 
             input("Drücke Enter um fortzufahren...")
         except FileNotFoundError:
