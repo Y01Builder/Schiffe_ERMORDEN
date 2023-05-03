@@ -26,10 +26,10 @@ class Game:
         try:
             print("Spiel Beginn!")
             print("")
-
+            file_path_player1 = self.__get_file_path(self.player1.playerid + 1)
+            file_path_player2 = self.__get_file_path(self.player2.playerid + 1)
             # if save files exist: try to load them.
-            if os.path.exists(rf"{self.path}\mapPlayer{self.player1.playerid + 1}.pickle") and os.path.exists(
-            rf"{self.path}\mapPlayer{self.player2.playerid + 1}.pickle"):
+            if os.path.exists(file_path_player1) and os.path.exists(file_path_player2):
 
                 self.player1 = self.__load_game(self.player1)
                 self.player2 = self.__load_game(self.player2)
@@ -88,6 +88,13 @@ class Game:
         except KeyboardInterrupt:
             print("Sie haben den Vorgang mit Ihrer Eingabe abgebrochen!")
             sys.exit(0)
+
+    def __get_file_path(self, playerid):
+        # check for OS and use the according path seperator
+        if sys.platform == "win32":
+            return rf"{self.path}\mapPlayer{playerid}.pickle"
+        else:
+            return f"{self.path}/mapPlayer{playerid}.pickle"
 
     def __startscreen(self):
         self.__print_kill_ship()
