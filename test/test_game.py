@@ -133,3 +133,7 @@ class TestGame(unittest.TestCase):
           "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3", "\n"
                                                   ]):
             self.game.start_game()
+
+
+if __name__ == "__main__":
+    unittest.main()

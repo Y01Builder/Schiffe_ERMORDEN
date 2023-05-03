@@ -56,3 +56,7 @@ class TestPlayer(unittest.TestCase):
         self.assertFalse(self.player.map.fields[0][0].fieldhit)
         #check ship_tiles after set
         self.assertEqual(self.player.map.ship_tiles, 30)
+
+
+if __name__ == "__main__":
+    unittest.main()

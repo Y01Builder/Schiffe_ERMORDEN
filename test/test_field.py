@@ -18,3 +18,7 @@ class TestField(unittest.TestCase):
         field.shiponfield = False
         self.assertFalse(field.get_ship_on_field())
         field.shiponfield = False
+
+
+if __name__ == "__main__":
+    unittest.main()

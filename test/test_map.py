@@ -81,3 +81,6 @@ class MapTests(unittest.TestCase):
         result = self.map._Map__validate_ship_placement(0, 0, "S", 3)
         self.assertFalse(result)
 
+
+if __name__ == "__main__":
+    unittest.main()
