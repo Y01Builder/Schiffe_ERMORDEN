@@ -1,3 +1,4 @@
+#pylint: disable=E0401
 """import randint and Player"""
 from random import randint
 from DTO.player import Player
@@ -60,6 +61,7 @@ class BotPlayer(Player):
     def __init__(self, name, playerid, difficulty=1):
         super().__init__(name, playerid)
         self.is_bot = True
+        self.turn = False
         self.difficulty = difficulty
         self._ships = [
         ["Schlachtschiff", 5, 1], ["Kreuzer", 4, 2], ["Zerstörer", 3, 3], ["Uboot", 2, 4]]
@@ -159,7 +161,7 @@ class BotPlayer(Player):
                 while not valid_hit:
                     trgt_x = randint(0, 9)
                     trgt_y = randint(0, 9)
-                    if not opponent.map.fields[trgt_y][trgt_x].get_field_hit():
+                    if not opponent.map.fields[trgt_x][trgt_y].get_field_hit():
                         valid_hit = True
                         return [chr(trgt_x+97),trgt_y+1]
                     continue
@@ -167,9 +169,10 @@ class BotPlayer(Player):
                 target = self.__statistical_analysis(opponent)
                 return target
             case 2:
-                for trgt_y, row in enumerate(opponent.map.fields):
-                    for trgt_x, field in enumerate(row):
-                        if field.get_ship_on_field() and not field.get_field_hit():
+                for trgt_y in range(0, 10):
+                    for trgt_x in range(0, 10):
+                        slctd_field = opponent.map.fields[trgt_x][trgt_y]
+                        if slctd_field.get_ship_on_field() and not slctd_field.get_field_hit():
                             return [chr(trgt_x+97),trgt_y+1]
         return False
 
@@ -286,7 +289,7 @@ class BotPlayer(Player):
                     tmp_y, tmp_x = trgt_y, trgt_x
 
         # Check whether there is a ship on that coordinate or not
-        if opponent.map.fields[tmp_y][tmp_x].get_ship_on_field():
+        if opponent.map.fields[tmp_x][tmp_y].get_ship_on_field():
 
             # If no ship is on that field, the probability of it to obtain a hidden ship is zero
             matrix[tmp_y][tmp_x] = 0
