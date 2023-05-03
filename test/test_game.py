@@ -42,7 +42,15 @@ class TestGame(unittest.TestCase):
         with patch('builtins.input', side_effect=["A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1", "S", "J10", "N",
                                           "A8", "O", "J7", "W", "F2", "O"]):
             player = Player('Mario', 0)
+            #ship A1
             self.assertTrue(self.game._Game__set_ships(player))
+            self.assertTrue(player.map.fields[0][0].shiponfield)
+            self.assertTrue(player.map.fields[0][1].shiponfield)
+            self.assertTrue(player.map.fields[0][2].shiponfield)
+            self.assertTrue(player.map.fields[0][3].shiponfield)
+            #ship E5
+            self.assertTrue(player.map.fields[4][4].shiponfield)
+            self.assertTrue(player.map.fields[7][4].shiponfield)
 
     def test_player_turn(self):
         player1 = Player('Mario', 0)
