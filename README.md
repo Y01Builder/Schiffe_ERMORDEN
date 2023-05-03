@@ -23,4 +23,4 @@
 
 ## Coverage:
   - python -m coverage run -m unittest
-  - Aktuelles coverage von 88%
+  - Aktuelles coverage von 92%
