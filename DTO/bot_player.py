@@ -185,8 +185,8 @@ class BotPlayer(Player):
         for name, length, count in self._ships:
             for i in range(0, count):
                 orientation, coordinate = self.__get_placement(length, ship_fields)
-                if not self.map.place_ships(coordinate, orientation, length):   
-                    print(f"Fehler placeShips: {i}. {name}")                    
+                if not self.map.place_ships(coordinate, orientation, length):
+                    print(f"Fehler placeShips: {i}. {name}")
 
     def __get_placement(self, length, ship_fields):
         """
