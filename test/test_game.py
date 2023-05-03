@@ -115,37 +115,6 @@ class TestGame(unittest.TestCase):
           "A8", "\n","\n", "B8", "\n","\n", "C10", "\n","\n", "D10", "\n","\n", "E10", "\n","\n", "F2", "\n","\n", "G2", "\n","\n", "J9", "\n","\n", "J10",
           "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3", "\n"
                                                   ]):
-        #with patch('builtins.input', side_effect=["Mario",
-        #"A1", "S",
-        #"Yannick",
-        #"A1", "S",
-        #"A1", "A1", "A2", "A2", "A3", "A3", "A4", "A4", "A5", "A5","A1", "A1", "A2", "A2", "A3", "A3", "A4", "A4", "A5", "A5"]):
-            self.game.start_game()
-
-    def test_start_game_with_corruptfile(self): # save the player object into the mapPlayerX.pickle file
-        with open("mapPlayer1.pickle", "w", encoding="utf-8") as file:
-            file.write("test")
-        player = Player('Mario', 0)
-        player.map.fields[0][0].shiponfield = True
-        player2 = Player('Yannick', 1)
-        player2.map.fields[0][0].shiponfield = True
-        self.game._Game__save_map(player2)
-        #test complete game with all ships player vs player
-        with patch('builtins.input', side_effect=[
-        "2", "N",
-        "Mario",
-        "A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O",
-        "Yannick",
-        "A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O",
-        "\n", "A1", "\n", "\n", "A2", "\n","\n", "A3", "\n","\n", "A4", "\n","\n", "A5", "\n","\n", "C2", "\n","\n", "C3", "\n","\n", "C4", "\n","\n", "C5", "\n","\n",
-        "E5", "\n","\n", "F5", "\n","\n", "G5", "\n","\n", "H5", "\n","\n","D7", "\n","\n","E7", "\n","\n", "F7", "\n","\n", "I7", "\n","\n", "J7", "\n","\n",
-          "A8", "\n","\n", "B8", "\n","\n", "C10", "\n","\n", "D10", "\n","\n", "E10", "\n","\n", "F2", "\n","\n", "G2", "\n","\n", "J9", "\n","\n", "J10",
-          "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3",
-        "\n","\n", "C1", "\n","\n","A1", "\n","\n", "A2", "\n","\n", "A3", "\n","\n", "A4", "\n","\n", "A5", "\n","\n", "C2", "\n","\n", "C3", "\n","\n", "C4", "\n","\n", "C5",
-         "\n","\n" , "E5", "\n","\n", "F5", "\n","\n", "G5", "\n","\n", "H5", "\n","\n","D7", "\n","\n","E7", "\n","\n", "F7", "\n","\n", "I7", "\n","\n", "J7", "\n","\n",
-          "A8", "\n","\n", "B8", "\n","\n", "C10", "\n","\n", "D10", "\n","\n", "E10", "\n","\n", "F2", "\n","\n", "G2", "\n","\n", "J9", "\n","\n", "J10",
-          "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3", "\n"
-                                                  ]):
             self.game.start_game()
 
     def test_end_game(self):
@@ -158,6 +127,35 @@ class TestGame(unittest.TestCase):
             self.game.end_game(testPlayer)
         self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer1.pickle"))
         self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer2.pickle"))
+
+    def test_start_game_with_corruptfile(self):
+        # save the player object into the mapPlayerX.pickle file
+        with open("mapPlayer1.pickle", "w", encoding="utf-8") as file:
+            file.write("test")
+        player = Player('Mario', 0)
+        player.map.fields[0][0].shiponfield = True
+        player2 = Player('Yannick', 1)
+        player2.map.fields[0][0].shiponfield = True
+
+        #test complete game with all ships player vs player
+        with patch('builtins.input', side_effect=[
+        "2", "N",
+        "Mario",
+        "A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O",
+        "Jan",
+        "A1", "S", "C5", "N", "E5", "O", "C10", "O", "D7", "O", "J1","S", "J10", "N", "A8", "O", "J7", "W", "F2", "O",
+        "\n", "A1", "\n", "\n", "A2", "\n","\n", "A3", "\n","\n", "A4", "\n","\n", "A5", "\n","\n", "C2", "\n","\n", "C3", "\n","\n", "C4", "\n","\n", "C5", "\n","\n",
+        "E5", "\n","\n", "F5", "\n","\n", "G5", "\n","\n", "H5", "\n","\n","D7", "\n","\n","E7", "\n","\n", "F7", "\n","\n", "I7", "\n","\n", "J7", "\n","\n",
+          "A8", "\n","\n", "B8", "\n","\n", "C10", "\n","\n", "D10", "\n","\n", "E10", "\n","\n", "F2", "\n","\n", "G2", "\n","\n", "J9", "\n","\n", "J10",
+          "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3",
+        "\n","\n", "C1", "\n","\n","A1", "\n","\n", "A2", "\n","\n", "A3", "\n","\n", "A4", "\n","\n", "A5", "\n","\n", "C2", "\n","\n", "C3", "\n","\n", "C4", "\n","\n", "C5",
+         "\n","\n" , "E5", "\n","\n", "F5", "\n","\n", "G5", "\n","\n", "H5", "\n","\n","D7", "\n","\n","E7", "\n","\n", "F7", "\n","\n", "I7", "\n","\n", "J7", "\n","\n",
+          "A8", "\n","\n", "B8", "\n","\n", "C10", "\n","\n", "D10", "\n","\n", "E10", "\n","\n", "F2", "\n","\n", "G2", "\n","\n", "J9", "\n","\n", "J10",
+          "\n","\n", "J1", "\n","\n", "J2", "\n","\n", "J3", "\n"
+                                                  ]):
+            self.game.start_game()
+            self.assertEqual(self.game.player1.name, "Mario")
+            self.assertEqual(self.game.player2.name, "Jan")
 
 if __name__ == "__main__":
     unittest.main()
