@@ -152,7 +152,7 @@ class TestBotPlayer(unittest.TestCase):
             opponent.map.fields[0][1].get_field_hit.return_value = True
             opponent.map.fields[0][2].get_ship_on_field.return_value = True
             opponent.map.fields[0][2].get_field_hit.return_value = False
-            self.assertEqual(self.bot._BotPlayer__shoot_cords(opponent), ['c', 1])
+            self.assertEqual(self.bot._BotPlayer__shoot_cords(opponent), ['a', 3])
             opponent.map.fields[0][0].get_ship_on_field.assert_called_once()
             opponent.map.fields[0][1].get_ship_on_field.assert_called_once()
             opponent.map.fields[0][2].get_ship_on_field.assert_called_once()
