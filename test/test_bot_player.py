@@ -1,11 +1,11 @@
-
+#pylint: disable=C
+#pylint: disable=W0212
 import unittest
 from unittest.mock import Mock, patch
 from DTO.player import Player
 from DTO.bot_player import BotPlayer
 
 class TestBotPlayer(unittest.TestCase):
-
 
     def setUp(self):
         self.opponent = Player('Opponent', 1)
@@ -65,7 +65,6 @@ class TestBotPlayer(unittest.TestCase):
         [30, 40, 46, 49, 50, 50, 49, 46, 40, 30],
         [20, 30, 36, 39, 40, 40, 39, 36, 30, 20]])
 
-    
     def test_place_ships(self):
         with patch.object(BotPlayer, '_BotPlayer__get_placement', side_effect=[('O', ['e', 10]),#5
                                                                               ('S', ['a', 3]),#4
@@ -80,56 +79,58 @@ class TestBotPlayer(unittest.TestCase):
             self.bot.place_ships()
         #ShipTiles ist fest auf 30 im Code gesetzt
         self.assertEqual(self.bot.map.ship_tiles, 30)
-    
 
-    
+
+
 
     def test_get_placement(self):
         # Test for correct orientation and coordinates
-        orientation, coords = self.bot._BotPlayer__get_placement(5, [])
-        self.assertIn(orientation, ['N', 'O', 'S', 'W'])
-        self.assertGreaterEqual(ord(coords[0]), ord('a'))
-        self.assertLessEqual(ord(coords[0]), ord('j'))
-        self.assertGreaterEqual(int(coords[1]), 1)
-        self.assertLessEqual(int(coords[1]), 10)
+        for i in range(9):
+            orientation, coords = self.bot._BotPlayer__get_placement(5, [])
+            self.assertIn(orientation, ['N', 'O', 'S', 'W'])
+            self.assertGreaterEqual(ord(coords[0]), ord('a'))
+            self.assertLessEqual(ord(coords[0]), ord('j'))
+            self.assertGreaterEqual(int(coords[1]), 1)
+            self.assertLessEqual(int(coords[1]), 10)
 
-        # Test for placement on significant ship fields
-        ship_fields = [[2, 3], [4, 3], [4, 4], [4, 5], [4, 6]]
-        orientation, coords = self.bot._BotPlayer__get_placement(3, ship_fields)
-        # Reset ship_fields, otherwise the coordinates of the placed ship would be contained
-        ship_fields = [[2, 3], [4, 3], [4, 4], [4, 5], [4, 6]]
-        x, y = ord(coords[0]) - 97, int(coords[1]) - 1
-        self.assertNotIn([x, y], ship_fields)
-        self.assertNotIn([x, y+1], ship_fields)
-        self.assertNotIn([x, y-1], ship_fields)
-        self.assertNotIn([x+1, y], ship_fields)
-        self.assertNotIn([x+1, y+1], ship_fields)
-        self.assertNotIn([x+1, y-1], ship_fields)
-        self.assertNotIn([x-1, y], ship_fields)
-        self.assertNotIn([x-1, y+1], ship_fields)
-        self.assertNotIn([x-1, y-1], ship_fields)
+            # Test for placement on significant ship fields
+            ship_fields = [[2, 3], [4, 3], [4, 4], [4, 5], [4, 6], [9,i]]
+            orientation, coords = self.bot._BotPlayer__get_placement(3, ship_fields)
+            # Reset ship_fields, otherwise the coordinates of the placed ship would be contained
+            ship_fields = [[2, 3], [4, 3], [4, 4], [4, 5], [4, 6], [9,i]]
+            x, y = ord(coords[0]) - 97, int(coords[1]) - 1
+            self.assertNotIn([x, y], ship_fields)
+            self.assertNotIn([x, y+1], ship_fields)
+            self.assertNotIn([x, y-1], ship_fields)
+            self.assertNotIn([x+1, y], ship_fields)
+            self.assertNotIn([x+1, y+1], ship_fields)
+            self.assertNotIn([x+1, y-1], ship_fields)
+            self.assertNotIn([x-1, y], ship_fields)
+            self.assertNotIn([x-1, y+1], ship_fields)
+            self.assertNotIn([x-1, y-1], ship_fields)
 
- 
-    """
-    def test_shoot_field(self):        
-        self.assertTrue(self.bot.set_difficulty(2))
-        opponent = Mock()
-        opponent.map.hit_field.return_value = True # Müsste funktionieren
-        opponent.map.ship_tiles = 0
-        self.assertTrue(self.bot.shoot_field(opponent))
-        opponent.map.hit_field.assert_called_once()
 
-        opponent.map.hit_field.return_value = True # Dass auch
-        opponent.map.ship_tiles = 1
-        self.assertFalse(self.bot.shoot_field(opponent))
-        self.assertEqual(opponent.map.hit_field.call_count, 2)
 
-        opponent.map.hit_field.return_value = False # Hier steckt er möglicherweiße im Deathloop
-        opponent.map.ship_tiles = 1
-        self.assertFalse(self.bot.shoot_field(opponent))
-        self.assertEqual(opponent.map.hit_field.call_count, 3)
-    """
-    
+    def test_shoot_field(self):
+        with patch.object(BotPlayer, '_BotPlayer__shoot_cords', return_value=['b', 3]):
+            opponent = Mock()
+
+            opponent.map.hit_field.return_value = False
+            opponent.map.ship_tiles = 1
+            self.assertFalse(self.bot.shoot_field(opponent))
+            opponent.map.hit_field.assert_called_once()
+
+            opponent.map.hit_field.return_value = True
+            opponent.map.ship_tiles = 1
+            self.assertFalse(self.bot.shoot_field(opponent))
+            self.assertEqual(opponent.map.hit_field.call_count, 2)
+
+            opponent.map.hit_field.return_value = True
+            opponent.map.ship_tiles = 0
+            self.assertTrue(self.bot.shoot_field(opponent))
+            self.assertEqual(opponent.map.hit_field.call_count, 3)
+
+
     def test_shoot_cords(self):
         opponent = Mock()
         opponent.map.fields = [[Mock() for _ in range(10)] for _ in range(10)]
@@ -148,10 +149,16 @@ class TestBotPlayer(unittest.TestCase):
         with patch('random.randint', side_effect=[0, 0, 1, 0, 2, 0]):
             opponent.map.fields[0][0].get_ship_on_field.return_value = False
             opponent.map.fields[0][1].get_ship_on_field.return_value = True
-            opponent.map.fields[0][1].get_field_hit.return_value = False
-            self.assertEqual(self.bot._BotPlayer__shoot_cords(opponent), ['b', 1])
+            opponent.map.fields[0][1].get_field_hit.return_value = True
+            opponent.map.fields[0][2].get_ship_on_field.return_value = True
+            opponent.map.fields[0][2].get_field_hit.return_value = False
+            self.assertEqual(self.bot._BotPlayer__shoot_cords(opponent), ['c', 1])
             opponent.map.fields[0][0].get_ship_on_field.assert_called_once()
             opponent.map.fields[0][1].get_ship_on_field.assert_called_once()
+            opponent.map.fields[0][2].get_ship_on_field.assert_called_once()
+
+            opponent.map.fields[0][2].get_field_hit.return_value = True
+            self.assertEqual(self.bot._BotPlayer__shoot_cords(opponent), False)
 
     def test_statistical_analysis(self):
         bot_player = BotPlayer('bot', 2, 1)
@@ -175,4 +182,5 @@ class TestBotPlayer(unittest.TestCase):
         del self.opponent
         del self.bot
 
-
+if __name__ == '__main__':
+    unittest.main()
