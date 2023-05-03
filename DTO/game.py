@@ -33,8 +33,6 @@ class Game:
 
                 self.player1 = self.__load_game(self.player1)
                 self.player2 = self.__load_game(self.player2)
-                if self.player2.is_bot:
-                    bot = [True]
 
                 if not self.player1 or not self.player2:
 
