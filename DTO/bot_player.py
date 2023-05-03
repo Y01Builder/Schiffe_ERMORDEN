@@ -156,27 +156,24 @@ class BotPlayer(Player):
                 A list containing the coordinates to shoot at,
                 or False if there are no valid coordinates.
         """
-        valid_hit = False
-        while not valid_hit:
-            match self.difficulty:
-                case 0:
+        match self.difficulty:
+            case 0:
+                valid_hit = False
+                while not valid_hit:
                     trgt_x = randint(0, 9)
                     trgt_y = randint(0, 9)
                     if not opponent.map.fields[trgt_y][trgt_x].get_field_hit():
                         valid_hit = True
                         return [chr(trgt_x+97),trgt_y+1]
                     continue
-                case 1:
-                    valid_hit = True
-                    target = self.__statistical_analysis(opponent)
-                    return target
-                case 2:
-                    for trgt_y, row in enumerate(opponent.map.fields):
-                        for trgt_x, field in enumerate(row):
-                            if field.get_ship_on_field() and not field.get_field_hit():
-                                valid_hit = True
-                                return [chr(trgt_x+97),trgt_y+1]
-                    continue
+            case 1:
+                target = self.__statistical_analysis(opponent)
+                return target
+            case 2:
+                for trgt_y, row in enumerate(opponent.map.fields):
+                    for trgt_x, field in enumerate(row):
+                        if field.get_ship_on_field() and not field.get_field_hit():
+                            return [chr(trgt_x+97),trgt_y+1]
         return False
 
 
