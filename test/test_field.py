@@ -10,11 +10,13 @@ class TestField(unittest.TestCase):
         self.assertTrue(field.get_field_hit())
         field.fieldhit = False
         self.assertFalse(field.get_field_hit())
-        field.fieldhit = False
 
     def test_get_ship_on_field(self):
         field = Field(False, True)
         self.assertTrue(field.get_ship_on_field())
         field.shiponfield = False
         self.assertFalse(field.get_ship_on_field())
-        field.shiponfield = False
+
+
+if __name__ == "__main__":
+    unittest.main()

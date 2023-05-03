@@ -150,3 +150,6 @@ class TestGame(unittest.TestCase):
             self.game.end_game(testPlayer)
         self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer1.pickle"))
         self.assertFalse(os.path.exists(f"{self.path}{self.seperator}mapPlayer2.pickle"))
+
+if __name__ == "__main__":
+    unittest.main()
