@@ -90,11 +90,13 @@ class Game:
             sys.exit(0)
 
     def __get_file_path(self, playerid):
+        file_path = ""
         # check for OS and use the according path seperator
         if sys.platform == "win32":
-            return rf"{self.path}\mapPlayer{playerid}.pickle"
+            file_path = rf"{self.path}\mapPlayer{playerid}.pickle"
         else:
-            return f"{self.path}/mapPlayer{playerid}.pickle"
+            file_path = f"{self.path}/mapPlayer{playerid}.pickle"
+        return file_path
 
     def __startscreen(self):
         self.__print_kill_ship()
@@ -288,8 +290,8 @@ class Game:
 
             # check for OS and use the according path seperator
             if sys.platform == "win32":
-                os.remove(f"{self.path}\mapPlayer1.pickle")
-                os.remove(f"{self.path}\mapPlayer2.pickle")
+                os.remove(rf"{self.path}\mapPlayer1.pickle")
+                os.remove(rf"{self.path}\mapPlayer2.pickle")
             else:
                 os.remove(f"{self.path}/mapPlayer1.pickle")
                 os.remove(f"{self.path}/mapPlayer2.pickle")
