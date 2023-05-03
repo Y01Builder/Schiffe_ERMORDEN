@@ -126,19 +126,16 @@ class BotPlayer(Player):
             bool
                 True if the opponent's ships have been completely destroyed, False otherwise.
         """
-        repeat = True
-        while repeat:
-            coordinate = self.__shoot_cords(opponent)
-            if opponent.map.hit_field(coordinate):
-                # when the hit was successful:
-                # stop the loop, end your turn and set turn of next player
-                repeat = False
-                self.turn = False
-                opponent.turn = True
+        coordinate = self.__shoot_cords(opponent)
+        if opponent.map.hit_field(coordinate):
+            # when the hit was successful:
+            # stop the loop, end your turn and set turn of next player
+            self.turn = False
+            opponent.turn = True
 
-                # return end of game, when the last ship tile of the opponent has been sunk.
-                if opponent.map.ship_tiles == 0:
-                    return True
+            # return end of game, when the last ship tile of the opponent has been sunk.
+            if opponent.map.ship_tiles == 0:
+                return True
         return False
 
     def __shoot_cords(self, opponent):
